@@ -1,0 +1,17 @@
+﻿@page
+@model UsersModel
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div><a href="/Admin/InviteUser">Invite User</a></div>
+
+<partial name="_CrudDataTablePartial" />
+
+
+@section Scripts {
+    
+}

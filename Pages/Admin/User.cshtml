@@ -1,0 +1,87 @@
+﻿@page
+@model UserModel
+
+@{
+    ViewData["Title"] = "User";
+}
+
+<h1>Update @ViewData["Title"]</h1>
+
+<div>
+    <a href="/Admin/Users">Back to Users</a>
+</div>
+<partial name="_FlashPartial" />
+
+<div class="form_div">
+<form method="post">
+    <table class="form_table">
+    <tr>
+        <td><label>Id</label>
+        <td><input asp-for="id" disabled></input>
+    </tr>
+    <tr>
+        <td><label>Username</label>
+        <td><input maxlength="20" asp-for="username"/>
+    </tr>
+    <tr>
+        <td><label>Email</label>
+        <td><input maxlength="64" type="email" asp-for="email_address"/>
+    </tr>
+    <tr>
+        <td><label>Admin</label>
+        <td><input asp-for="is_admin" value="true" />
+    </tr>
+
+
+    <tr>
+        <td colspan="2">
+            <div  class="user_page_info_text">
+            Inactive users can't log in.
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td><label>Active</label>
+        <td><input asp-for="is_active" value="true" />
+    </tr>
+    
+    <tr>
+        <td colspan="2">
+            <div  class="user_page_info_text">
+            Report Only means that a user can create new issues and post comments to existing issue but can't change the issue description, details, assignment, etc, or send emails.
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td><label>Report Only</label>
+        <td><input asp-for="is_report_only" value="true" />
+    </tr>
+        
+    <tr>
+        <td colspan="2">
+            <div  class="user_page_info_text">
+            When you assign a user to an organization, then that user can only view and update issues associated with that organization. 
+            keep automatically modifies Issue Queries adding a SQL "WHERE" clause that limits the view to issues belonging to the same organization as the user. 
+            When a user is not assoicated with an organization, then the user can see all issues.
+            </div> 
+        </td>
+    </tr>
+    <tr>
+        <td><label>Organization</label>
+        <td><select asp-for="organization_id" asp-items="@Model.organizations">
+            <option value=0>None</option>
+        </select>
+    </tr>    
+    
+    
+    <tr>
+        <td><button type="submit">Save</button>
+    <tr>
+    </table>
+</form>
+</div>
+
+@section Scripts {
+    
+}
+

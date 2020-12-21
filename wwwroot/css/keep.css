@@ -1,0 +1,633 @@
+﻿/* tags */
+
+body {
+    margin: 8px;
+}
+
+body,
+button,
+input,
+select {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+select {
+    padding: 2px;
+    background-color: white;
+}
+
+td {
+    vertical-align: top;
+}
+
+th {
+    vertical-align: bottom;
+    font-weight: normal;
+    background-color: #eeeeee;
+}
+
+a,
+button,
+.fake_link,
+a:visited {
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover,
+button:hover,
+.fake_link:hover {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover {
+    color: red;
+    /* don't change cursor */
+}
+
+button {
+    padding: 5px;
+    border-radius: 6px;
+    background-color: #dddddd;
+}
+
+button,
+input,
+textarea,
+select {
+    border: 1px solid #cccccc;
+}
+
+input:disabled {
+    /* same color as form */
+    background: transparent;
+    border: none;
+    color: black;
+}
+
+div {
+    margin-bottom: 15px;
+}
+
+/* done with tags */
+
+/* menu */
+
+ul.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #eee;
+    margin-bottom: 16px;
+}
+  
+.menu>li {
+    float: left;
+}
+
+.menu>li.menu_right {
+    float:right;
+}
+
+.menu>li>a {
+    display: block;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 14px;
+    padding-bottom: 6px;
+}
+
+.menu>li>button {
+    margin-left: 12px;
+    margin-top: 7px;
+}
+
+.menu>li>a.logo {
+    background-color: lightgreen;
+    letter-spacing: 2px;
+    margin-right: 10px;
+    font-size: 20px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.goto_input {
+    width: 50px;
+}
+/* supress spinner */
+
+/* Chrome, Safari, Edge, Opera */
+.goto_input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.goto_input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* menu end */
+
+
+h1 {
+    display: inline;
+    text-align: left;
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+h1::after {
+    content: "\a\a";
+    white-space: pre;
+}
+
+img {
+    max-width: 900px;
+}
+
+.crud_table {
+    display: inline-block;
+}
+
+/* end top part of page */
+
+/* 
+
+page content
+
+https://stackoverflow.com/questions/283961/centering-a-div-block-without-the-width 
+
+*/
+
+/* in the layouts, the container for the individual pages */
+.content_parent {
+    text-align: center;
+    position: relative;
+}
+
+
+.centered_and_left_just {
+    display: inline-block;
+    text-align: left;
+}
+
+.just_left {
+    text-align: left;
+}
+
+.posts_outer {
+    text-align: center;
+}
+
+.posts_inner {
+    display: inline-block;
+    text-align: left;
+}
+
+.flash_parent {
+    text-align: center;
+}
+
+.flash {
+    display: inline-block;
+    text-align: left;
+}
+
+/* FORMS */
+.form_div {
+    display: inline-block;
+}
+
+form {
+    text-align: left;
+    background-color: #eeeeee;
+    border-radius: 8px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 3px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+
+}
+
+.form_table,
+.form_table>tr,
+.form_table>td {
+    border-collapse: collapse;
+}
+
+.form_table>tbody>tr>td {
+    padding: 5px;
+}
+
+
+.flash_msg {
+    background-color: #ccffcc;
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 900px;
+}
+
+.flash_err {
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 900px;
+
+    background-color: #ffaaaa;
+    font-weight: bold;
+}
+
+.flash_line {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.issue_description_input {
+    width: 800px;
+    padding: 2px;
+}
+
+.issue_textarea {
+    width: 800px;
+    height: 80px;
+}
+
+.post_form_textarea {
+    width: 890px;
+    height: 80px;
+}
+
+
+.post_form_email_to_input {
+    width: 850px;
+}
+
+.name_input {
+    width: 300px;
+}
+
+.issue_query_name_input {
+    width: 600px;
+}
+
+.prep_for_another {
+    margin-left: 40px;
+}
+
+/* prove I can hide things on the issue form */
+
+
+
+/* data tables */
+table.dt {
+    border-collapse: collapse;
+}
+
+table.dt>tbody>tr>th {
+    border: 1px solid #cccccc;
+    padding: 3px;
+    text-align: left;
+    vertical-align: bottom;
+    font-size: 11pt;
+}
+
+table.dt>tbody>tr>td {
+    border: 1px solid #cccccc;
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 11pt;
+}
+
+.unsorted {
+    background-color: #eeeeee;
+    font-weight: normal;
+}
+
+.sorted {
+    background-color: yellow;
+    font-weight: normal;
+
+}
+
+.gray {
+    color: #dddddd;
+}
+
+#search_terms {
+    width: 700px;
+}
+
+.info_text {
+    font-size: 14px;
+    color: green;
+}
+
+.post {
+    border: 1px solid gray;
+    padding: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #fafffa;
+    width: 900px;
+    border-radius: 6px;
+}
+
+
+pre {
+    overflow-x: auto;
+    font-family: "Lucida Console", "Courier New", Courier, monospace;
+    font-size: 14px;
+    margin: 0px;
+    padding-top: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 3px;
+}
+
+
+.show_hide_image {
+    display: inline;
+    font-size: 13px;
+}
+
+.show_hide_image:hover {
+    display: inline;
+    font-size: 13px;
+}
+
+textarea#sql {
+    width: 900px;
+    height: 120px;
+}
+
+.issue_query_description_textarea {
+    width: 805px;
+    height: 30px;
+}
+
+.login_register {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px;
+    background: #eeffee;
+    border-radius: 6px;
+    width: 300px;
+    border: 1px solid gray;
+}
+
+.about {
+    width: 900px;
+}
+
+/* these styles for the thing you see when you hit the "To:" button in post email */
+.post_email_to_select {
+    position: absolute;
+    border: 4px solid lightgray;
+    height: 2px;
+    width: 2px;
+    resize: both;
+    overflow: auto;
+    z-index: 99;
+    visibility: hidden;
+    cursor: pointer;
+    background: white;
+    opacity: 100%;
+    border-radius: 6px;
+}
+
+.dont_flash_when_selected {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.post_email_to_select_row {
+    color: blue;
+    border-bottom: 1px solid lightgray;
+    margin: 0;
+    padding: 4px;
+}
+
+.post_email_to_select_close {
+    text-align: right;
+    background: lightgray;
+    padding-right: 10px;
+    margin: 0px;
+}
+
+.html_part_iframe,
+.post_text
+ {
+    border: 1px dashed gray;
+    background-color: #fafafa;
+    margin-bottom: 8px;
+    width: 890px;
+}
+.history {
+    width: 900px;
+
+}
+
+.html_part_iframe {
+    resize: both;
+    overflow: auto;
+}
+
+.iframe_body {
+    background-color: yellow;
+}
+
+/* end of post_email_to_select styles */
+
+.admin_page>tbody>tr>td {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-right: 6px;
+}
+
+.user_page_info_text {
+    display: inline-block;
+    padding-top: 12px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    font-size: 14px;
+    color: green;
+    width: 800px;
+}
+
+.waiting {
+
+    background-color: yellow;
+    border: 1px solid red;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+
+.issue_select {
+    margin-top: 5px;
+    margin-right: 40px;
+}
+.issue_select_label {
+    margin-top: 5px;
+}
+
+.dropdown_container {
+    padding-left: 5px;
+    display: grid;
+    grid-template-columns: 110px 330px 110px 330px;
+}
+
+#organization_label {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
+#organization_id {
+    grid-row-start: 1;
+    grid-column-start: 2;
+}
+
+#assigned_to_user_label {
+    grid-row-start: 1;
+    grid-column-start: 3;
+}
+
+#assigned_to_user_id {
+    grid-row-start: 1;
+    grid-column-start: 4;
+}
+
+/* status in initial config */
+#custom_1_label {
+    grid-row-start: 2;
+    grid-column-start: 3;
+}
+#custom_1_id {
+    grid-row-start: 2;
+    grid-column-start: 4;
+}
+
+/* priority in initial config */
+#custom_2_label {
+    grid-row-start: 2;
+    grid-column-start: 1;
+}
+#custom_2_id {
+    grid-row-start: 2;
+    grid-column-start: 2;
+}
+
+/* colors in initial config */
+#custom_3_label {
+    grid-row-start: 6;
+    grid-column-start: 1;
+}
+#custom_3_id {
+    grid-row-start: 6;
+    grid-column-start: 2;
+}
+
+/* category in initial config */
+#custom_4_label {
+    grid-row-start: 3;
+    grid-column-start: 1;
+}
+#custom_4_id {
+    grid-row-start: 3;
+    grid-column-start: 2;
+}
+
+/* five in initial config */
+#custom_5_label {
+    grid-row-start: 7;
+    grid-column-start: 1;
+}
+#custom_5_id {
+    grid-row-start: 7;
+    grid-column-start: 2;
+}
+
+/* six in initial config */
+#custom_6_label {
+    grid-row-start: 8;
+    grid-column-start: 1;
+}
+#custom_6_id {
+    grid-row-start: 8;
+    grid-column-start: 2;
+}
+
+
+/* modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    border-radius: 6px;
+    background-color: rgba(100,100,100,.5);
+}
+
+    .modal>.window {
+        width: 800px;
+        margin: 0 auto;
+        position: relative;
+        background-color: #eeeeee;
+        border: 2px solid lightgray;
+        border-radius: 15px;
+    }
+
+        .modal>.window>.header {
+            margin: 0px;
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: transparent;
+        }
+
+        .modal>.window>.body {
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
+
+            margin: 0px;
+            padding: 5px;
+            background: white;
+            
+        }
+
+        .modal>.window>.footer {
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        
+            background-color: transparent;
+            margin: 0px;
+         
+            
+        }

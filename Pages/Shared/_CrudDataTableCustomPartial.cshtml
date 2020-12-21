@@ -1,0 +1,67 @@
+<partial name="_FlashPartial" />
+
+<script>
+    function delete_row(id) {
+        if (confirm("Are you sure?")) {
+            $("#delete_id").val(id);
+            $("#delete_form").submit();
+        }
+    }
+</script>
+
+<form style="display:none" id="delete_form" method="post">
+    <input id="delete_id" name="delete_id" value="-1" />
+    <input name="field" value="@Model.field" />
+</form>
+
+<div class="data_table_div crud_table">
+
+    <table class="dt">
+        @{
+            <tr>
+                @{
+                    for (int i = 0; i < Model.dt.Columns.Count; i++)
+                    {
+
+                        <th>@Model.dt.Columns[i].ColumnName</th>
+                    }
+                }
+                <th>Action</th>
+            </tr>
+            for (int row = 0; row < Model.dt.Rows.Count; row++)
+            {
+                DataRow dr = Model.dt.Rows[row];
+                <tr>
+                    @{
+                        for (int col = 0; col < Model.dt.Columns.Count; col++)
+                        {
+                            if (col == 0)
+                            {
+                                <td><a href="/Admin/Detail?id=@(dr[0])&field=@(Model.field)">@dr[col]</a></td>
+                            }
+                            else
+                            {
+                                <td>@bd_db.format(dr[col])</td>
+                            }
+                        }
+                    }
+
+
+                    <td>
+                        <a href="/Admin/Detail?id=@(dr[0])&field=@(Model.field)">Update</a>
+                        @{
+                            int number_of_issues = Convert.ToInt32(dr["Number of Issues"]);
+                            if (number_of_issues == 0)
+                            {
+                                <span>&nbsp; &nbsp;</span>
+                                <a href="#" onclick="delete_row(@dr[0])">
+                                    Delete
+                                </a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

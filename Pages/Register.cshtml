@@ -1,0 +1,45 @@
+@page
+@{
+    Layout = "_layout_signed_out";
+}
+
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+<partial name="_FlashPartial" />
+
+<div class="form_div">
+<form method="post">
+    <table class="form_table">
+    <tr>
+        <td><label>Username</label>
+        <td><input  maxlength="20" asp-for="username" />
+    </tr>
+    <tr>
+        <td><label>Email</label>
+        <td><input maxlength="64" type="email" asp-for="email_address" />
+    </tr>
+    <tr>
+        <td><label>Create a password</label>
+        <td><input maxlength="50" type="password" asp-for="password" />
+    </tr>
+    <tr>
+        <td><button type="submit">Register</button>
+    </tr>
+    </table>
+</form>
+</div>
+
+<div>
+<div><a href="/Login">Login</a></div>
+<div><a href="/ResetPasswordRequest">Forgot Password?</a></div>
+</div>
+
+@section Scripts {
+    
+}
+

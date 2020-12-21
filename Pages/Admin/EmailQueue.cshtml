@@ -1,0 +1,49 @@
+﻿@page
+@model EmailQueueModel
+
+@{
+    ViewData["Title"] = "Outgoing Email Queue";
+}
+
+<div class="just_left">
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_FlashPartial" />
+
+<div class="fake_link" onclick="document.location.reload()">
+Refresh this page
+</div>
+
+<div class="fake_link" onclick="reset_counts()">
+Reset retry counts
+</div>
+<div class="info_text">MaxNumberOfSendingRetries=@bd_config.get(bd_config.MaxNumberOfSendingRetries)</div>
+
+<div class="fake_link" onclick="retry()">
+Retry sending
+</div>
+<div class="info_text">You may need to reset the retry counts first.</div>
+
+<partial name="_CrudDataTableWithDeletePartial" />
+
+</div>
+
+<form id="post_action_form" style="display:none;" method="post">
+    <input asp-for="action" value=""/>
+</form>
+
+
+@section Scripts {
+
+<script>
+    function reset_counts() {
+        $("#action").val("reset_counts");
+        $("#post_action_form").submit();
+    }
+
+    function retry() {
+        $("#action").val("retry");
+        $("#post_action_form").submit();
+    }
+</script>
+}

@@ -1,0 +1,1049 @@
+22:19:29.1929 INF bd 1 config:
+22:19:30.1930 INF bd 1 DbServer=127.0.0.1
+22:19:30.1930 INF bd 1 DbDatabase=keep
+22:19:30.1930 INF bd 1 DbUser=postgres
+22:19:30.1930 INF bd 1 DbPassword=password
+22:19:30.1930 INF bd 1 SmtpHost=smtp.mail.yahoo.com
+22:19:30.1930 INF bd 1 SmtpPort=587
+22:19:30.1930 INF bd 1 SmtpUser=ctrager_smtp@yahoo.com
+22:19:30.1930 INF bd 1 SmtpPassword=pmuzvdbljsxxkddl
+22:19:30.1930 INF bd 1 WebsiteUrlRootWithoutSlash=http://localhost:5000
+22:19:30.1930 INF bd 1 EnableIncomingEmail=1
+22:19:30.1930 INF bd 1 ImapHost=imap.mail.yahoo.com
+22:19:30.1930 INF bd 1 ImapPort=993
+22:19:30.1930 INF bd 1 ImapUser=ctrager_smtp@yahoo.com
+22:19:30.1930 INF bd 1 ImapPassword=pmuzvdbljsxxkddl
+22:19:30.1930 INF bd 1 CustomFieldEnabled1=1
+22:19:30.1930 INF bd 1 CustomFieldLabelSingular1=Status
+22:19:30.1930 INF bd 1 CustomFieldLabelPlural1=Statuses
+22:19:30.1930 INF bd 1 CustomFieldEnabled2=1
+22:19:30.1930 INF bd 1 CustomFieldLabelSingular2=Priority
+22:19:30.1930 INF bd 1 CustomFieldLabelPlural2=Priorities
+22:19:30.1930 INF bd 1 CustomFieldEnabled3=0
+22:19:30.1930 INF bd 1 CustomFieldLabelSingular3=Color
+22:19:30.1930 INF bd 1 CustomFieldLabelPlural3=Colors
+22:19:30.1930 INF bd 1 CustomFieldEnabled4=1
+22:19:30.1930 INF bd 1 CustomFieldLabelSingular4=Category
+22:19:30.1930 INF bd 1 CustomFieldLabelPlural4=Categories
+22:19:30.1930 INF bd 1 CustomFieldEnabled5=0
+22:19:30.1930 INF bd 1 CustomFieldLabelSingular5=Five
+22:19:30.1930 INF bd 1 CustomFieldLabelPlural5=Fives
+22:19:30.1930 INF bd 1 CustomFieldEnabled6=0
+22:19:30.1930 INF bd 1 CustomFieldLabelSingular6=Six
+22:19:30.1930 INF bd 1 CustomFieldLabelPlural6=Sixes
+22:19:30.1930 INF bd 1 AppName=keep Dev
+22:19:30.1930 INF bd 1 OutgoingEmailDisplayName=keep Team
+22:19:30.1930 INF bd 1 IssueEmailPreamble=Reply to this email directly or view issue on keep at $URL
+22:19:30.1930 INF bd 1 UseCustomCss=0
+22:19:30.1930 INF bd 1 CustomCssFilename=custom_css_example.css
+22:19:30.1930 INF bd 1 LogFileFolder=keep_logs
+22:19:30.1930 INF bd 1 RowsPerPage=30
+22:19:30.1930 INF bd 1 NewUserStartsInactive=0
+22:19:30.1930 INF bd 1 NewUserStartsReportOnly=0
+22:19:30.1930 INF bd 1 DateFormat=yyyy-MM-dd HH:mm
+22:19:30.1930 INF bd 1 UseDeveloperExceptionPage=1
+22:19:30.1930 INF bd 1 EnableIncomingEmailIssueCreation=1
+22:19:30.1930 INF bd 1 DebugSkipSendingEmails=0
+22:19:30.1930 INF bd 1 MaxNumberOfSendingRetries=3
+22:19:30.1930 INF bd 1 SecondsToSleepAfterCheckingIncomingEmail=300
+22:19:30.1930 INF bd 1 RegistrationRequestExpirationInHours=1
+22:19:30.1930 INF bd 1 InviteUserExpirationInHours=48
+22:19:30.1930 INF bd 1 DebugAutoConfirmRegistration=0
+22:19:30.1930 INF bd 1 CheckForDangerousSqlKeywords=1
+22:19:30.1930 INF bd 1 DangerousSqlKeywords=alter,copy,create,createdb,createrole,createuser,delete,drop,exec,execute,grant,insert,update
+22:19:30.1930 INF bd 1 DebugEnableRunSql=1
+22:19:30.1930 INF bd 1 DebugSkipDeleteOfIncomingEmails=1
+22:19:30.1930 INF bd 1 DebugPathToEmailFile=
+22:19:30.1930 INF bd 1 DebugFolderToSaveEmails=
+22:19:30.1930 INF bd 1 DebugLogLevelMicrosoft=3
+22:19:30.1930 INF bd 1 DebugLogLevelkeep=2
+22:19:30.1930 INF bd 1 DebugLogLevelPostgres=2
+22:19:30.1930 INF  Starting host
+22:19:30.1930 INF bd 1 Startup
+22:19:30.1930 INF bd 1 appsettings.json
+22:19:30.1930 INF bd 1 ConfigureServices
+22:19:30.1930 INF bd 7 SQL 2:delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < @date
+22:19:30.1930 INF bd 6 SQL 1:select * from outgoing_email_queue 
+                where oq_sending_attempt_count < @max_retries
+                order by oq_id desc
+22:19:30.1930 INF bd 6 @max_retries=3
+22:19:30.1930 INF bd 7 @date=12/20/2020 9:19:30 PM
+22:19:30.1930 FTL bd_pg Breaking connector
+22:19:30.1930 FTL bd_pg Breaking connector
+22:27:04.274 INF bd 1 config:
+22:27:04.274 INF bd 1 DbServer=127.0.0.1
+22:27:04.274 INF bd 1 DbDatabase=keep
+22:27:04.274 INF bd 1 DbUser=postgres
+22:27:04.274 INF bd 1 DbPassword=password
+22:27:04.274 INF bd 1 SmtpHost=smtp.mail.yahoo.com
+22:27:04.274 INF bd 1 SmtpPort=587
+22:27:04.274 INF bd 1 SmtpUser=ctrager_smtp@yahoo.com
+22:27:04.274 INF bd 1 SmtpPassword=pmuzvdbljsxxkddl
+22:27:04.274 INF bd 1 WebsiteUrlRootWithoutSlash=http://localhost:5000
+22:27:04.274 INF bd 1 EnableIncomingEmail=1
+22:27:04.274 INF bd 1 ImapHost=imap.mail.yahoo.com
+22:27:04.274 INF bd 1 ImapPort=993
+22:27:04.274 INF bd 1 ImapUser=ctrager_smtp@yahoo.com
+22:27:04.274 INF bd 1 ImapPassword=pmuzvdbljsxxkddl
+22:27:04.274 INF bd 1 CustomFieldEnabled1=1
+22:27:04.274 INF bd 1 CustomFieldLabelSingular1=Status
+22:27:04.274 INF bd 1 CustomFieldLabelPlural1=Statuses
+22:27:04.274 INF bd 1 CustomFieldEnabled2=1
+22:27:04.274 INF bd 1 CustomFieldLabelSingular2=Priority
+22:27:04.274 INF bd 1 CustomFieldLabelPlural2=Priorities
+22:27:04.274 INF bd 1 CustomFieldEnabled3=0
+22:27:04.274 INF bd 1 CustomFieldLabelSingular3=Color
+22:27:04.274 INF bd 1 CustomFieldLabelPlural3=Colors
+22:27:04.274 INF bd 1 CustomFieldEnabled4=1
+22:27:04.274 INF bd 1 CustomFieldLabelSingular4=Category
+22:27:04.274 INF bd 1 CustomFieldLabelPlural4=Categories
+22:27:04.274 INF bd 1 CustomFieldEnabled5=0
+22:27:04.274 INF bd 1 CustomFieldLabelSingular5=Five
+22:27:04.274 INF bd 1 CustomFieldLabelPlural5=Fives
+22:27:04.274 INF bd 1 CustomFieldEnabled6=0
+22:27:04.274 INF bd 1 CustomFieldLabelSingular6=Six
+22:27:04.274 INF bd 1 CustomFieldLabelPlural6=Sixes
+22:27:04.274 INF bd 1 AppName=keep Dev
+22:27:04.274 INF bd 1 OutgoingEmailDisplayName=keep Team
+22:27:04.274 INF bd 1 IssueEmailPreamble=Reply to this email directly or view issue on keep at $URL
+22:27:04.274 INF bd 1 UseCustomCss=0
+22:27:04.274 INF bd 1 CustomCssFilename=custom_css_example.css
+22:27:04.274 INF bd 1 LogFileFolder=keep_logs
+22:27:04.274 INF bd 1 RowsPerPage=30
+22:27:04.274 INF bd 1 NewUserStartsInactive=0
+22:27:04.274 INF bd 1 NewUserStartsReportOnly=0
+22:27:04.274 INF bd 1 DateFormat=yyyy-MM-dd HH:mm
+22:27:04.274 INF bd 1 UseDeveloperExceptionPage=1
+22:27:04.274 INF bd 1 EnableIncomingEmailIssueCreation=1
+22:27:04.274 INF bd 1 DebugSkipSendingEmails=0
+22:27:04.274 INF bd 1 MaxNumberOfSendingRetries=3
+22:27:04.274 INF bd 1 SecondsToSleepAfterCheckingIncomingEmail=300
+22:27:04.274 INF bd 1 RegistrationRequestExpirationInHours=1
+22:27:04.274 INF bd 1 InviteUserExpirationInHours=48
+22:27:04.274 INF bd 1 DebugAutoConfirmRegistration=0
+22:27:04.274 INF bd 1 CheckForDangerousSqlKeywords=1
+22:27:04.274 INF bd 1 DangerousSqlKeywords=alter,copy,create,createdb,createrole,createuser,delete,drop,exec,execute,grant,insert,update
+22:27:04.274 INF bd 1 DebugEnableRunSql=1
+22:27:04.274 INF bd 1 DebugSkipDeleteOfIncomingEmails=1
+22:27:04.274 INF bd 1 DebugPathToEmailFile=
+22:27:04.274 INF bd 1 DebugFolderToSaveEmails=
+22:27:04.274 INF bd 1 DebugLogLevelMicrosoft=3
+22:27:04.274 INF bd 1 DebugLogLevelkeep=2
+22:27:04.274 INF bd 1 DebugLogLevelPostgres=2
+22:27:04.274 INF  Starting host
+22:27:04.274 INF bd 1 Startup
+22:27:04.274 INF bd 1 appsettings.json
+22:27:05.275 INF bd 1 ConfigureServices
+22:27:05.275 INF bd 6 SQL 1:select * from outgoing_email_queue 
+                where oq_sending_attempt_count < @max_retries
+                order by oq_id desc
+22:27:05.275 INF bd 7 SQL 2:delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < @date
+22:27:05.275 INF bd 6 @max_retries=3
+22:27:05.275 INF bd 7 @date=12/20/2020 9:27:05 PM
+22:27:05.275 INF bd 1 Configure
+22:27:05.275 INF bd_pg Executing statement(s):
+	
+SELECT version()
+	SELECT ns.nspname, typ_and_elem_type.*,
+   CASE
+       WHEN typtype IN ('b', 'e', 'p') THEN 0           -- First base types, enums, pseudo-types
+       WHEN typtype = 'r' THEN 1                        -- Ranges after
+       WHEN typtype = 'c' THEN 2                        -- Composites after
+       WHEN typtype = 'd' AND elemtyptype <> 'a' THEN 3 -- Domains over non-arrays after
+       WHEN typtype = 'a' THEN 4                        -- Arrays before
+       WHEN typtype = 'd' AND elemtyptype = 'a' THEN 5  -- Domains over arrays last
+    END AS ord
+FROM (
+    -- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a
+    -- We first do this for the type (innerest-most subquery), and then for its element type
+    -- This also returns the array element, range subtype and domain base type as elemtypoid
+    SELECT
+        typ.oid, typ.typnamespace, typ.typname, typ.typtype, typ.typrelid, typ.typnotnull, typ.relkind,
+        elemtyp.oid AS elemtypoid, elemtyp.typname AS elemtypname, elemcls.relkind AS elemrelkind,
+        CASE WHEN elemproc.proname='array_recv' THEN 'a' ELSE elemtyp.typtype END AS elemtyptype
+    FROM (
+        SELECT typ.oid, typnamespace, typname, typrelid, typnotnull, relkind, typelem AS elemoid,
+            CASE WHEN proc.proname='array_recv' THEN 'a' ELSE typ.typtype END AS typtype,
+            CASE
+                WHEN proc.proname='array_recv' THEN typ.typelem
+                WHEN typ.typtype='r' THEN rngsubtype
+                WHEN typ.typtype='d' THEN typ.typbasetype
+            END AS elemtypoid
+        FROM pg_type AS typ
+        LEFT JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+        LEFT JOIN pg_proc AS proc ON proc.oid = typ.typreceive
+        LEFT JOIN pg_range ON (pg_range.rngtypid = typ.oid)
+    ) AS typ
+    LEFT JOIN pg_type AS elemtyp ON elemtyp.oid = elemtypoid
+    LEFT JOIN pg_class AS elemcls ON (elemcls.oid = elemtyp.typrelid)
+    LEFT JOIN pg_proc AS elemproc ON elemproc.oid = elemtyp.typreceive
+) AS typ_and_elem_type
+JOIN pg_namespace AS ns ON (ns.oid = typnamespace)
+WHERE
+    typtype IN ('b', 'r', 'e', 'd') OR -- Base, range, enum, domain
+    (typtype = 'c' AND relkind='c') OR -- User-defined free-standing composites (not table composites) by default
+    (typtype = 'p' AND typname IN ('record', 'void')) OR -- Some special supported pseudo-types
+    (typtype = 'a' AND (  -- Array of...
+        elemtyptype IN ('b', 'r', 'e', 'd') OR -- Array of base, range, enum, domain
+        (elemtyptype = 'p' AND elemtypname IN ('record', 'void')) OR -- Arrays of special supported pseudo-types
+        (elemtyptype = 'c' AND elemrelkind='c') -- Array of user-defined free-standing composites (not table composites) by default
+    ))
+ORDER BY ord
+	-- Load field definitions for (free-standing) composite types
+SELECT typ.oid, att.attname, att.atttypid
+FROM pg_type AS typ
+JOIN pg_namespace AS ns ON (ns.oid = typ.typnamespace)
+JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+JOIN pg_attribute AS att ON (att.attrelid = typ.typrelid)
+WHERE
+  (typ.typtype = 'c' AND cls.relkind='c') AND
+  attnum > 0 AND     -- Don't load system attributes
+  NOT attisdropped
+ORDER BY typ.oid, att.attnum
+	-- Load enum fields
+SELECT pg_type.oid, enumlabel
+FROM pg_enum
+JOIN pg_type ON pg_type.oid=enumtypid
+ORDER BY oid, enumsortorder
+
+22:27:05.275 INF bd_pg Query duration time: 212ms
+22:27:05.275 INF bd_pg Query duration high water mark is now 212
+22:27:05.275 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:27:05.275 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:27:06.276 INF bd_pg Connection opened (multiplexing)
+22:27:06.276 INF bd_pg Connection opened (multiplexing)
+22:27:06.276 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < $1
+
+22:27:06.276 INF bd_pg Executing statement(s):
+	select * from outgoing_email_queue 
+                where oq_sending_attempt_count < $1
+                order by oq_id desc
+
+22:27:06.276 INF bd_pg Query duration time: 4ms
+22:27:06.276 INF bd_pg Connection closed
+22:27:06.276 INF bd 7 SQL 3:delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < @date
+22:27:06.276 INF bd 7 @date=12/18/2020 10:27:06 PM
+22:27:06.276 INF bd_pg Connection opened (multiplexing)
+22:27:06.276 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < $1
+
+22:27:06.276 INF bd_pg Query duration time: 0ms
+22:27:06.276 INF bd_pg Connection closed
+22:27:06.276 INF bd_pg Query duration time: 28ms
+22:27:06.276 INF bd_pg Connection closed
+22:27:11.2711 INF bd 4 Startup.cs URL: http://localhost:5000/
+22:27:11.2711 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET / responded 302 in 117.8042 ms
+22:27:11.2711 INF bd 10 Startup.cs URL: http://localhost:5000/App/Issues
+22:27:11.2711 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /App/Issues responded 302 in 4.9136 ms
+22:27:11.2711 INF bd 11 Startup.cs URL: http://localhost:5000/Login
+22:27:12.2712 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Login responded 200 in 223.5841 ms
+22:27:12.2712 INF bd 10 Startup.cs URL: http://localhost:5000/css/keep.css
+22:27:12.2712 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /css/keep.css responded 404 in 0.6513 ms
+22:35:35.3535 INF bd 1 config:
+22:35:35.3535 INF bd 1 DbServer=127.0.0.1
+22:35:35.3535 INF bd 1 DbDatabase=keep
+22:35:35.3535 INF bd 1 DbUser=postgres
+22:35:35.3535 INF bd 1 DbPassword=password
+22:35:35.3535 INF bd 1 SmtpHost=smtp.mail.yahoo.com
+22:35:35.3535 INF bd 1 SmtpPort=587
+22:35:35.3535 INF bd 1 SmtpUser=ctrager_smtp@yahoo.com
+22:35:35.3535 INF bd 1 SmtpPassword=pmuzvdbljsxxkddl
+22:35:35.3535 INF bd 1 WebsiteUrlRootWithoutSlash=http://localhost:5000
+22:35:35.3535 INF bd 1 EnableIncomingEmail=1
+22:35:35.3535 INF bd 1 ImapHost=imap.mail.yahoo.com
+22:35:35.3535 INF bd 1 ImapPort=993
+22:35:35.3535 INF bd 1 ImapUser=ctrager_smtp@yahoo.com
+22:35:35.3535 INF bd 1 ImapPassword=pmuzvdbljsxxkddl
+22:35:35.3535 INF bd 1 CustomFieldEnabled1=1
+22:35:35.3535 INF bd 1 CustomFieldLabelSingular1=Status
+22:35:35.3535 INF bd 1 CustomFieldLabelPlural1=Statuses
+22:35:35.3535 INF bd 1 CustomFieldEnabled2=1
+22:35:35.3535 INF bd 1 CustomFieldLabelSingular2=Priority
+22:35:35.3535 INF bd 1 CustomFieldLabelPlural2=Priorities
+22:35:35.3535 INF bd 1 CustomFieldEnabled3=0
+22:35:35.3535 INF bd 1 CustomFieldLabelSingular3=Color
+22:35:35.3535 INF bd 1 CustomFieldLabelPlural3=Colors
+22:35:35.3535 INF bd 1 CustomFieldEnabled4=1
+22:35:35.3535 INF bd 1 CustomFieldLabelSingular4=Category
+22:35:35.3535 INF bd 1 CustomFieldLabelPlural4=Categories
+22:35:35.3535 INF bd 1 CustomFieldEnabled5=0
+22:35:35.3535 INF bd 1 CustomFieldLabelSingular5=Five
+22:35:35.3535 INF bd 1 CustomFieldLabelPlural5=Fives
+22:35:35.3535 INF bd 1 CustomFieldEnabled6=0
+22:35:35.3535 INF bd 1 CustomFieldLabelSingular6=Six
+22:35:35.3535 INF bd 1 CustomFieldLabelPlural6=Sixes
+22:35:35.3535 INF bd 1 AppName=keep Dev
+22:35:35.3535 INF bd 1 OutgoingEmailDisplayName=keep Team
+22:35:35.3535 INF bd 1 IssueEmailPreamble=Reply to this email directly or view issue on keep at $URL
+22:35:35.3535 INF bd 1 UseCustomCss=0
+22:35:35.3535 INF bd 1 CustomCssFilename=custom_css_example.css
+22:35:35.3535 INF bd 1 LogFileFolder=keep_logs
+22:35:35.3535 INF bd 1 RowsPerPage=30
+22:35:35.3535 INF bd 1 NewUserStartsInactive=0
+22:35:35.3535 INF bd 1 NewUserStartsReportOnly=0
+22:35:35.3535 INF bd 1 DateFormat=yyyy-MM-dd HH:mm
+22:35:35.3535 INF bd 1 UseDeveloperExceptionPage=1
+22:35:35.3535 INF bd 1 EnableIncomingEmailIssueCreation=1
+22:35:35.3535 INF bd 1 DebugSkipSendingEmails=0
+22:35:35.3535 INF bd 1 MaxNumberOfSendingRetries=3
+22:35:35.3535 INF bd 1 SecondsToSleepAfterCheckingIncomingEmail=300
+22:35:35.3535 INF bd 1 RegistrationRequestExpirationInHours=1
+22:35:35.3535 INF bd 1 InviteUserExpirationInHours=48
+22:35:35.3535 INF bd 1 DebugAutoConfirmRegistration=0
+22:35:35.3535 INF bd 1 CheckForDangerousSqlKeywords=1
+22:35:35.3535 INF bd 1 DangerousSqlKeywords=alter,copy,create,createdb,createrole,createuser,delete,drop,exec,execute,grant,insert,update
+22:35:35.3535 INF bd 1 DebugEnableRunSql=1
+22:35:35.3535 INF bd 1 DebugSkipDeleteOfIncomingEmails=1
+22:35:35.3535 INF bd 1 DebugPathToEmailFile=
+22:35:35.3535 INF bd 1 DebugFolderToSaveEmails=
+22:35:35.3535 INF bd 1 DebugLogLevelMicrosoft=3
+22:35:35.3535 INF bd 1 DebugLogLevelkeep=2
+22:35:35.3535 INF bd 1 DebugLogLevelPostgres=2
+22:35:35.3535 INF  Starting host
+22:35:35.3535 INF bd 1 Startup
+22:35:35.3535 INF bd 1 appsettings.json
+22:35:35.3535 INF bd 1 ConfigureServices
+22:35:35.3535 INF bd 6 SQL 1:select * from outgoing_email_queue 
+                where oq_sending_attempt_count < @max_retries
+                order by oq_id desc
+22:35:35.3535 INF bd 6 @max_retries=3
+22:35:35.3535 INF bd 7 SQL 2:delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < @date
+22:35:35.3535 INF bd 7 @date=12/20/2020 9:35:35 PM
+22:35:35.3535 INF bd 1 Configure
+22:35:35.3535 INF bd_pg Executing statement(s):
+	
+SELECT version()
+	SELECT ns.nspname, typ_and_elem_type.*,
+   CASE
+       WHEN typtype IN ('b', 'e', 'p') THEN 0           -- First base types, enums, pseudo-types
+       WHEN typtype = 'r' THEN 1                        -- Ranges after
+       WHEN typtype = 'c' THEN 2                        -- Composites after
+       WHEN typtype = 'd' AND elemtyptype <> 'a' THEN 3 -- Domains over non-arrays after
+       WHEN typtype = 'a' THEN 4                        -- Arrays before
+       WHEN typtype = 'd' AND elemtyptype = 'a' THEN 5  -- Domains over arrays last
+    END AS ord
+FROM (
+    -- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a
+    -- We first do this for the type (innerest-most subquery), and then for its element type
+    -- This also returns the array element, range subtype and domain base type as elemtypoid
+    SELECT
+        typ.oid, typ.typnamespace, typ.typname, typ.typtype, typ.typrelid, typ.typnotnull, typ.relkind,
+        elemtyp.oid AS elemtypoid, elemtyp.typname AS elemtypname, elemcls.relkind AS elemrelkind,
+        CASE WHEN elemproc.proname='array_recv' THEN 'a' ELSE elemtyp.typtype END AS elemtyptype
+    FROM (
+        SELECT typ.oid, typnamespace, typname, typrelid, typnotnull, relkind, typelem AS elemoid,
+            CASE WHEN proc.proname='array_recv' THEN 'a' ELSE typ.typtype END AS typtype,
+            CASE
+                WHEN proc.proname='array_recv' THEN typ.typelem
+                WHEN typ.typtype='r' THEN rngsubtype
+                WHEN typ.typtype='d' THEN typ.typbasetype
+            END AS elemtypoid
+        FROM pg_type AS typ
+        LEFT JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+        LEFT JOIN pg_proc AS proc ON proc.oid = typ.typreceive
+        LEFT JOIN pg_range ON (pg_range.rngtypid = typ.oid)
+    ) AS typ
+    LEFT JOIN pg_type AS elemtyp ON elemtyp.oid = elemtypoid
+    LEFT JOIN pg_class AS elemcls ON (elemcls.oid = elemtyp.typrelid)
+    LEFT JOIN pg_proc AS elemproc ON elemproc.oid = elemtyp.typreceive
+) AS typ_and_elem_type
+JOIN pg_namespace AS ns ON (ns.oid = typnamespace)
+WHERE
+    typtype IN ('b', 'r', 'e', 'd') OR -- Base, range, enum, domain
+    (typtype = 'c' AND relkind='c') OR -- User-defined free-standing composites (not table composites) by default
+    (typtype = 'p' AND typname IN ('record', 'void')) OR -- Some special supported pseudo-types
+    (typtype = 'a' AND (  -- Array of...
+        elemtyptype IN ('b', 'r', 'e', 'd') OR -- Array of base, range, enum, domain
+        (elemtyptype = 'p' AND elemtypname IN ('record', 'void')) OR -- Arrays of special supported pseudo-types
+        (elemtyptype = 'c' AND elemrelkind='c') -- Array of user-defined free-standing composites (not table composites) by default
+    ))
+ORDER BY ord
+	-- Load field definitions for (free-standing) composite types
+SELECT typ.oid, att.attname, att.atttypid
+FROM pg_type AS typ
+JOIN pg_namespace AS ns ON (ns.oid = typ.typnamespace)
+JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+JOIN pg_attribute AS att ON (att.attrelid = typ.typrelid)
+WHERE
+  (typ.typtype = 'c' AND cls.relkind='c') AND
+  attnum > 0 AND     -- Don't load system attributes
+  NOT attisdropped
+ORDER BY typ.oid, att.attnum
+	-- Load enum fields
+SELECT pg_type.oid, enumlabel
+FROM pg_enum
+JOIN pg_type ON pg_type.oid=enumtypid
+ORDER BY oid, enumsortorder
+
+22:35:36.3536 INF bd_pg Query duration time: 130ms
+22:35:36.3536 INF bd_pg Query duration high water mark is now 130
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:35:36.3536 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:35:36.3536 INF bd_pg Connection opened (multiplexing)
+22:35:36.3536 INF bd_pg Connection opened (multiplexing)
+22:35:36.3536 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < $1
+
+22:35:36.3536 INF bd_pg Executing statement(s):
+	select * from outgoing_email_queue 
+                where oq_sending_attempt_count < $1
+                order by oq_id desc
+
+22:35:36.3536 INF bd_pg Query duration time: 3ms
+22:35:36.3536 INF bd_pg Connection closed
+22:35:36.3536 INF bd 7 SQL 3:delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < @date
+22:35:36.3536 INF bd 7 @date=12/18/2020 10:35:36 PM
+22:35:36.3536 INF bd_pg Connection opened (multiplexing)
+22:35:36.3536 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < $1
+
+22:35:36.3536 INF bd_pg Query duration time: 0ms
+22:35:36.3536 INF bd_pg Connection closed
+22:35:36.3536 INF bd_pg Query duration time: 21ms
+22:35:36.3536 INF bd_pg Connection closed
+22:35:37.3537 INF bd 12 Startup.cs URL: http://localhost:5000/
+22:35:37.3537 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET / responded 302 in 91.6938 ms
+22:35:37.3537 INF bd 4 Startup.cs URL: http://localhost:5000/App/Issues
+22:35:37.3537 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /App/Issues responded 302 in 2.7816 ms
+22:35:37.3537 INF bd 10 Startup.cs URL: http://localhost:5000/Login
+22:35:38.3538 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Login responded 200 in 174.6384 ms
+22:35:38.3538 INF bd 11 Startup.cs URL: http://localhost:5000/favicon.ico
+22:35:38.3538 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /favicon.ico responded 404 in 1.3819 ms
+22:36:24.3624 INF bd 11 Startup.cs URL: http://localhost:5000/Login
+22:36:24.3624 INF bd 11 SQL 1:select * from users where 
+            (us_username = @us_username or us_email_address = @us_email_address)
+22:36:24.3624 INF bd 11 @us_username=admin
+22:36:24.3624 INF bd 11 @us_email_address=admin
+22:36:24.3624 INF bd_pg Connection opened (multiplexing)
+22:36:24.3624 INF bd_pg Executing statement(s):
+	select * from users where 
+            (us_username = $1 or us_email_address = $2)
+
+22:36:24.3624 INF bd_pg Query duration time: 38ms
+22:36:24.3624 INF bd_pg Connection closed
+22:36:24.3624 INF bd 11 SQL 2:insert into reset_password_requests 
+                     (rp_guid, rp_email_address, rp_user_id)
+                    values(@rp_guid, @rp_email_address, @rp_user_id)
+22:36:24.3624 INF bd 11 @rp_guid=f3fad105-4977-495e-a2bf-c752fea0e226
+22:36:24.3624 INF bd 11 @rp_email_address=none
+22:36:24.3624 INF bd 11 @rp_user_id=2
+22:36:24.3624 INF bd_pg Connection opened (multiplexing)
+22:36:24.3624 INF bd_pg Executing statement(s):
+	insert into reset_password_requests 
+                     (rp_guid, rp_email_address, rp_user_id)
+                    values($1, $2, $3)
+
+22:36:24.3624 INF bd_pg Query duration time: 6ms
+22:36:24.3624 INF bd_pg Connection closed
+22:36:24.3624 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP POST /Login responded 302 in 90.0280 ms
+22:36:24.3624 INF bd 15 Startup.cs URL: http://localhost:5000/ResetPassword?guid=f3fad105-4977-495e-a2bf-c752fea0e226
+22:36:24.3624 INF bd 15 SQL 1:select us_id, us_username, us_email_address from reset_password_requests 
+            inner join users on us_id = rp_user_id
+            where rp_guid = @rp_guid
+22:36:24.3624 INF bd 15 @rp_guid=f3fad105-4977-495e-a2bf-c752fea0e226
+22:36:24.3624 INF bd_pg Connection opened (multiplexing)
+22:36:24.3624 INF bd_pg Executing statement(s):
+	select us_id, us_username, us_email_address from reset_password_requests 
+            inner join users on us_id = rp_user_id
+            where rp_guid = $1
+
+22:36:24.3624 INF bd_pg Query duration time: 2ms
+22:36:24.3624 INF bd_pg Connection closed
+22:36:24.3624 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /ResetPassword?guid=f3fad105-4977-495e-a2bf-c752fea0e226 responded 200 in 51.8723 ms
+22:36:28.3628 INF bd 11 Startup.cs URL: http://localhost:5000/ResetPassword?guid=f3fad105-4977-495e-a2bf-c752fea0e226
+22:36:28.3628 INF bd 11 SQL 1:select us_id, us_username, us_email_address from reset_password_requests 
+            inner join users on us_id = rp_user_id
+            where rp_guid = @rp_guid
+22:36:28.3628 INF bd 11 @rp_guid=f3fad105-4977-495e-a2bf-c752fea0e226
+22:36:28.3628 INF bd_pg Connection opened (multiplexing)
+22:36:28.3628 INF bd_pg Executing statement(s):
+	select us_id, us_username, us_email_address from reset_password_requests 
+            inner join users on us_id = rp_user_id
+            where rp_guid = $1
+
+22:36:28.3628 INF bd_pg Query duration time: 1ms
+22:36:28.3628 INF bd_pg Connection closed
+22:36:28.3628 INF bd 11 SQL 2:update users set us_password = @us_password, us_email_address = @us_email_address where us_id = @us_id
+22:36:28.3628 INF bd 11 @rp_guid=f3fad105-4977-495e-a2bf-c752fea0e226
+22:36:28.3628 INF bd 11 @us_password=986R6VXwUZf2kTy0kVV14MVa1mNMLKBIFjoQ75PkZf8JTAng
+22:36:28.3628 INF bd 11 @us_id=2
+22:36:28.3628 INF bd 11 @us_email_address=admin@example.com
+22:36:28.3628 INF bd_pg Connection opened (multiplexing)
+22:36:28.3628 INF bd_pg Executing statement(s):
+	update users set us_password = $1, us_email_address = $2 where us_id = $3
+
+22:36:28.3628 INF bd_pg Query duration time: 4ms
+22:36:28.3628 INF bd_pg Connection closed
+22:36:28.3628 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP POST /ResetPassword?guid=f3fad105-4977-495e-a2bf-c752fea0e226 responded 302 in 100.5991 ms
+22:36:28.3628 INF bd 11 Startup.cs URL: http://localhost:5000/Index
+22:36:28.3628 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Index responded 302 in 4.7655 ms
+22:36:28.3628 INF bd 17 Startup.cs URL: http://localhost:5000/App/Issues
+22:36:28.3628 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /App/Issues responded 302 in 0.2731 ms
+22:36:28.3628 INF bd 16 Startup.cs URL: http://localhost:5000/Login
+22:36:28.3628 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Login responded 200 in 2.9795 ms
+22:38:20.3820 INF bd 1 config:
+22:38:20.3820 INF bd 1 DbServer=127.0.0.1
+22:38:20.3820 INF bd 1 DbDatabase=keep
+22:38:20.3820 INF bd 1 DbUser=postgres
+22:38:20.3820 INF bd 1 DbPassword=password
+22:38:20.3820 INF bd 1 SmtpHost=smtp.mail.yahoo.com
+22:38:20.3820 INF bd 1 SmtpPort=587
+22:38:20.3820 INF bd 1 SmtpUser=ctrager_smtp@yahoo.com
+22:38:20.3820 INF bd 1 SmtpPassword=pmuzvdbljsxxkddl
+22:38:20.3820 INF bd 1 WebsiteUrlRootWithoutSlash=http://localhost:5000
+22:38:20.3820 INF bd 1 EnableIncomingEmail=1
+22:38:20.3820 INF bd 1 ImapHost=imap.mail.yahoo.com
+22:38:20.3820 INF bd 1 ImapPort=993
+22:38:20.3820 INF bd 1 ImapUser=ctrager_smtp@yahoo.com
+22:38:20.3820 INF bd 1 ImapPassword=pmuzvdbljsxxkddl
+22:38:20.3820 INF bd 1 CustomFieldEnabled1=1
+22:38:20.3820 INF bd 1 CustomFieldLabelSingular1=Status
+22:38:20.3820 INF bd 1 CustomFieldLabelPlural1=Statuses
+22:38:20.3820 INF bd 1 CustomFieldEnabled2=1
+22:38:20.3820 INF bd 1 CustomFieldLabelSingular2=Priority
+22:38:20.3820 INF bd 1 CustomFieldLabelPlural2=Priorities
+22:38:20.3820 INF bd 1 CustomFieldEnabled3=0
+22:38:20.3820 INF bd 1 CustomFieldLabelSingular3=Color
+22:38:20.3820 INF bd 1 CustomFieldLabelPlural3=Colors
+22:38:20.3820 INF bd 1 CustomFieldEnabled4=1
+22:38:20.3820 INF bd 1 CustomFieldLabelSingular4=Category
+22:38:20.3820 INF bd 1 CustomFieldLabelPlural4=Categories
+22:38:20.3820 INF bd 1 CustomFieldEnabled5=0
+22:38:20.3820 INF bd 1 CustomFieldLabelSingular5=Five
+22:38:20.3820 INF bd 1 CustomFieldLabelPlural5=Fives
+22:38:20.3820 INF bd 1 CustomFieldEnabled6=0
+22:38:20.3820 INF bd 1 CustomFieldLabelSingular6=Six
+22:38:20.3820 INF bd 1 CustomFieldLabelPlural6=Sixes
+22:38:20.3820 INF bd 1 AppName=keep Dev
+22:38:20.3820 INF bd 1 OutgoingEmailDisplayName=keep Team
+22:38:20.3820 INF bd 1 IssueEmailPreamble=Reply to this email directly or view issue on keep at $URL
+22:38:20.3820 INF bd 1 UseCustomCss=0
+22:38:20.3820 INF bd 1 CustomCssFilename=custom_css_example.css
+22:38:20.3820 INF bd 1 LogFileFolder=keep_logs
+22:38:20.3820 INF bd 1 RowsPerPage=30
+22:38:20.3820 INF bd 1 NewUserStartsInactive=0
+22:38:20.3820 INF bd 1 NewUserStartsReportOnly=0
+22:38:20.3820 INF bd 1 DateFormat=yyyy-MM-dd HH:mm
+22:38:20.3820 INF bd 1 UseDeveloperExceptionPage=1
+22:38:20.3820 INF bd 1 EnableIncomingEmailIssueCreation=1
+22:38:20.3820 INF bd 1 DebugSkipSendingEmails=0
+22:38:20.3820 INF bd 1 MaxNumberOfSendingRetries=3
+22:38:20.3820 INF bd 1 SecondsToSleepAfterCheckingIncomingEmail=300
+22:38:20.3820 INF bd 1 RegistrationRequestExpirationInHours=1
+22:38:20.3820 INF bd 1 InviteUserExpirationInHours=48
+22:38:20.3820 INF bd 1 DebugAutoConfirmRegistration=0
+22:38:20.3820 INF bd 1 CheckForDangerousSqlKeywords=1
+22:38:20.3820 INF bd 1 DangerousSqlKeywords=alter,copy,create,createdb,createrole,createuser,delete,drop,exec,execute,grant,insert,update
+22:38:20.3820 INF bd 1 DebugEnableRunSql=1
+22:38:20.3820 INF bd 1 DebugSkipDeleteOfIncomingEmails=1
+22:38:20.3820 INF bd 1 DebugPathToEmailFile=
+22:38:20.3820 INF bd 1 DebugFolderToSaveEmails=
+22:38:20.3820 INF bd 1 DebugLogLevelMicrosoft=3
+22:38:20.3820 INF bd 1 DebugLogLevelkeep=2
+22:38:20.3820 INF bd 1 DebugLogLevelPostgres=2
+22:38:20.3820 INF  Starting host
+22:38:21.3821 INF bd 1 Startup
+22:38:21.3821 INF bd 1 appsettings.json
+22:38:21.3821 INF bd 1 ConfigureServices
+22:38:21.3821 INF bd 6 SQL 1:select * from outgoing_email_queue 
+                where oq_sending_attempt_count < @max_retries
+                order by oq_id desc
+22:38:21.3821 INF bd 7 SQL 2:delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < @date
+22:38:21.3821 INF bd 7 @date=12/20/2020 9:38:21 PM
+22:38:21.3821 INF bd 6 @max_retries=3
+22:38:21.3821 INF bd 1 Configure
+22:38:21.3821 INF bd_pg Executing statement(s):
+	
+SELECT version()
+	SELECT ns.nspname, typ_and_elem_type.*,
+   CASE
+       WHEN typtype IN ('b', 'e', 'p') THEN 0           -- First base types, enums, pseudo-types
+       WHEN typtype = 'r' THEN 1                        -- Ranges after
+       WHEN typtype = 'c' THEN 2                        -- Composites after
+       WHEN typtype = 'd' AND elemtyptype <> 'a' THEN 3 -- Domains over non-arrays after
+       WHEN typtype = 'a' THEN 4                        -- Arrays before
+       WHEN typtype = 'd' AND elemtyptype = 'a' THEN 5  -- Domains over arrays last
+    END AS ord
+FROM (
+    -- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a
+    -- We first do this for the type (innerest-most subquery), and then for its element type
+    -- This also returns the array element, range subtype and domain base type as elemtypoid
+    SELECT
+        typ.oid, typ.typnamespace, typ.typname, typ.typtype, typ.typrelid, typ.typnotnull, typ.relkind,
+        elemtyp.oid AS elemtypoid, elemtyp.typname AS elemtypname, elemcls.relkind AS elemrelkind,
+        CASE WHEN elemproc.proname='array_recv' THEN 'a' ELSE elemtyp.typtype END AS elemtyptype
+    FROM (
+        SELECT typ.oid, typnamespace, typname, typrelid, typnotnull, relkind, typelem AS elemoid,
+            CASE WHEN proc.proname='array_recv' THEN 'a' ELSE typ.typtype END AS typtype,
+            CASE
+                WHEN proc.proname='array_recv' THEN typ.typelem
+                WHEN typ.typtype='r' THEN rngsubtype
+                WHEN typ.typtype='d' THEN typ.typbasetype
+            END AS elemtypoid
+        FROM pg_type AS typ
+        LEFT JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+        LEFT JOIN pg_proc AS proc ON proc.oid = typ.typreceive
+        LEFT JOIN pg_range ON (pg_range.rngtypid = typ.oid)
+    ) AS typ
+    LEFT JOIN pg_type AS elemtyp ON elemtyp.oid = elemtypoid
+    LEFT JOIN pg_class AS elemcls ON (elemcls.oid = elemtyp.typrelid)
+    LEFT JOIN pg_proc AS elemproc ON elemproc.oid = elemtyp.typreceive
+) AS typ_and_elem_type
+JOIN pg_namespace AS ns ON (ns.oid = typnamespace)
+WHERE
+    typtype IN ('b', 'r', 'e', 'd') OR -- Base, range, enum, domain
+    (typtype = 'c' AND relkind='c') OR -- User-defined free-standing composites (not table composites) by default
+    (typtype = 'p' AND typname IN ('record', 'void')) OR -- Some special supported pseudo-types
+    (typtype = 'a' AND (  -- Array of...
+        elemtyptype IN ('b', 'r', 'e', 'd') OR -- Array of base, range, enum, domain
+        (elemtyptype = 'p' AND elemtypname IN ('record', 'void')) OR -- Arrays of special supported pseudo-types
+        (elemtyptype = 'c' AND elemrelkind='c') -- Array of user-defined free-standing composites (not table composites) by default
+    ))
+ORDER BY ord
+	-- Load field definitions for (free-standing) composite types
+SELECT typ.oid, att.attname, att.atttypid
+FROM pg_type AS typ
+JOIN pg_namespace AS ns ON (ns.oid = typ.typnamespace)
+JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+JOIN pg_attribute AS att ON (att.attrelid = typ.typrelid)
+WHERE
+  (typ.typtype = 'c' AND cls.relkind='c') AND
+  attnum > 0 AND     -- Don't load system attributes
+  NOT attisdropped
+ORDER BY typ.oid, att.attnum
+	-- Load enum fields
+SELECT pg_type.oid, enumlabel
+FROM pg_enum
+JOIN pg_type ON pg_type.oid=enumtypid
+ORDER BY oid, enumsortorder
+
+22:38:21.3821 INF bd_pg Query duration time: 164ms
+22:38:21.3821 INF bd_pg Query duration high water mark is now 164
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:38:21.3821 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:38:22.3822 INF bd_pg Connection opened (multiplexing)
+22:38:22.3822 INF bd_pg Connection opened (multiplexing)
+22:38:22.3822 INF bd_pg Executing statement(s):
+	select * from outgoing_email_queue 
+                where oq_sending_attempt_count < $1
+                order by oq_id desc
+
+22:38:22.3822 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < $1
+
+22:38:22.3822 INF bd_pg Query duration time: 16ms
+22:38:22.3822 INF bd_pg Connection closed
+22:38:22.3822 INF bd 7 SQL 3:delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < @date
+22:38:22.3822 INF bd 7 @date=12/18/2020 10:38:22 PM
+22:38:22.3822 INF bd_pg Connection opened (multiplexing)
+22:38:22.3822 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < $1
+
+22:38:22.3822 INF bd_pg Query duration time: 2ms
+22:38:22.3822 INF bd_pg Connection closed
+22:38:22.3822 INF bd_pg Query duration time: 62ms
+22:38:22.3822 INF bd_pg Connection closed
+22:38:27.3827 INF bd 1 config:
+22:38:27.3827 INF bd 1 DbServer=127.0.0.1
+22:38:27.3827 INF bd 1 DbDatabase=keep
+22:38:27.3827 INF bd 1 DbUser=postgres
+22:38:27.3827 INF bd 1 DbPassword=password
+22:38:27.3827 INF bd 1 SmtpHost=smtp.mail.yahoo.com
+22:38:27.3827 INF bd 1 SmtpPort=587
+22:38:27.3827 INF bd 1 SmtpUser=ctrager_smtp@yahoo.com
+22:38:27.3827 INF bd 1 SmtpPassword=pmuzvdbljsxxkddl
+22:38:27.3827 INF bd 1 WebsiteUrlRootWithoutSlash=http://localhost:5000
+22:38:27.3827 INF bd 1 EnableIncomingEmail=1
+22:38:27.3827 INF bd 1 ImapHost=imap.mail.yahoo.com
+22:38:27.3827 INF bd 1 ImapPort=993
+22:38:27.3827 INF bd 1 ImapUser=ctrager_smtp@yahoo.com
+22:38:27.3827 INF bd 1 ImapPassword=pmuzvdbljsxxkddl
+22:38:27.3827 INF bd 1 CustomFieldEnabled1=1
+22:38:27.3827 INF bd 1 CustomFieldLabelSingular1=Status
+22:38:27.3827 INF bd 1 CustomFieldLabelPlural1=Statuses
+22:38:27.3827 INF bd 1 CustomFieldEnabled2=1
+22:38:27.3827 INF bd 1 CustomFieldLabelSingular2=Priority
+22:38:27.3827 INF bd 1 CustomFieldLabelPlural2=Priorities
+22:38:27.3827 INF bd 1 CustomFieldEnabled3=0
+22:38:27.3827 INF bd 1 CustomFieldLabelSingular3=Color
+22:38:27.3827 INF bd 1 CustomFieldLabelPlural3=Colors
+22:38:27.3827 INF bd 1 CustomFieldEnabled4=1
+22:38:27.3827 INF bd 1 CustomFieldLabelSingular4=Category
+22:38:27.3827 INF bd 1 CustomFieldLabelPlural4=Categories
+22:38:27.3827 INF bd 1 CustomFieldEnabled5=0
+22:38:27.3827 INF bd 1 CustomFieldLabelSingular5=Five
+22:38:27.3827 INF bd 1 CustomFieldLabelPlural5=Fives
+22:38:27.3827 INF bd 1 CustomFieldEnabled6=0
+22:38:27.3827 INF bd 1 CustomFieldLabelSingular6=Six
+22:38:27.3827 INF bd 1 CustomFieldLabelPlural6=Sixes
+22:38:27.3827 INF bd 1 AppName=keep Dev
+22:38:27.3827 INF bd 1 OutgoingEmailDisplayName=keep Team
+22:38:27.3827 INF bd 1 IssueEmailPreamble=Reply to this email directly or view issue on keep at $URL
+22:38:27.3827 INF bd 1 UseCustomCss=0
+22:38:27.3827 INF bd 1 CustomCssFilename=custom_css_example.css
+22:38:27.3827 INF bd 1 LogFileFolder=keep_logs
+22:38:27.3827 INF bd 1 RowsPerPage=30
+22:38:27.3827 INF bd 1 NewUserStartsInactive=0
+22:38:27.3827 INF bd 1 NewUserStartsReportOnly=0
+22:38:27.3827 INF bd 1 DateFormat=yyyy-MM-dd HH:mm
+22:38:27.3827 INF bd 1 UseDeveloperExceptionPage=1
+22:38:27.3827 INF bd 1 EnableIncomingEmailIssueCreation=1
+22:38:27.3827 INF bd 1 DebugSkipSendingEmails=0
+22:38:27.3827 INF bd 1 MaxNumberOfSendingRetries=3
+22:38:27.3827 INF bd 1 SecondsToSleepAfterCheckingIncomingEmail=300
+22:38:27.3827 INF bd 1 RegistrationRequestExpirationInHours=1
+22:38:27.3827 INF bd 1 InviteUserExpirationInHours=48
+22:38:27.3827 INF bd 1 DebugAutoConfirmRegistration=0
+22:38:27.3827 INF bd 1 CheckForDangerousSqlKeywords=1
+22:38:27.3827 INF bd 1 DangerousSqlKeywords=alter,copy,create,createdb,createrole,createuser,delete,drop,exec,execute,grant,insert,update
+22:38:27.3827 INF bd 1 DebugEnableRunSql=1
+22:38:27.3827 INF bd 1 DebugSkipDeleteOfIncomingEmails=1
+22:38:27.3827 INF bd 1 DebugPathToEmailFile=
+22:38:27.3827 INF bd 1 DebugFolderToSaveEmails=
+22:38:27.3827 INF bd 1 DebugLogLevelMicrosoft=3
+22:38:27.3827 INF bd 1 DebugLogLevelkeep=2
+22:38:27.3827 INF bd 1 DebugLogLevelPostgres=2
+22:38:27.3827 INF  Starting host
+22:38:28.3828 INF bd 1 Startup
+22:38:28.3828 INF bd 1 appsettings.json
+22:38:28.3828 INF bd 1 ConfigureServices
+22:38:28.3828 INF bd 6 SQL 2:select * from outgoing_email_queue 
+                where oq_sending_attempt_count < @max_retries
+                order by oq_id desc
+22:38:28.3828 INF bd 7 SQL 1:delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < @date
+22:38:28.3828 INF bd 6 @max_retries=3
+22:38:28.3828 INF bd 7 @date=12/20/2020 9:38:28 PM
+22:38:28.3828 INF bd 1 Configure
+22:38:28.3828 INF bd_pg Executing statement(s):
+	
+SELECT version()
+	SELECT ns.nspname, typ_and_elem_type.*,
+   CASE
+       WHEN typtype IN ('b', 'e', 'p') THEN 0           -- First base types, enums, pseudo-types
+       WHEN typtype = 'r' THEN 1                        -- Ranges after
+       WHEN typtype = 'c' THEN 2                        -- Composites after
+       WHEN typtype = 'd' AND elemtyptype <> 'a' THEN 3 -- Domains over non-arrays after
+       WHEN typtype = 'a' THEN 4                        -- Arrays before
+       WHEN typtype = 'd' AND elemtyptype = 'a' THEN 5  -- Domains over arrays last
+    END AS ord
+FROM (
+    -- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a
+    -- We first do this for the type (innerest-most subquery), and then for its element type
+    -- This also returns the array element, range subtype and domain base type as elemtypoid
+    SELECT
+        typ.oid, typ.typnamespace, typ.typname, typ.typtype, typ.typrelid, typ.typnotnull, typ.relkind,
+        elemtyp.oid AS elemtypoid, elemtyp.typname AS elemtypname, elemcls.relkind AS elemrelkind,
+        CASE WHEN elemproc.proname='array_recv' THEN 'a' ELSE elemtyp.typtype END AS elemtyptype
+    FROM (
+        SELECT typ.oid, typnamespace, typname, typrelid, typnotnull, relkind, typelem AS elemoid,
+            CASE WHEN proc.proname='array_recv' THEN 'a' ELSE typ.typtype END AS typtype,
+            CASE
+                WHEN proc.proname='array_recv' THEN typ.typelem
+                WHEN typ.typtype='r' THEN rngsubtype
+                WHEN typ.typtype='d' THEN typ.typbasetype
+            END AS elemtypoid
+        FROM pg_type AS typ
+        LEFT JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+        LEFT JOIN pg_proc AS proc ON proc.oid = typ.typreceive
+        LEFT JOIN pg_range ON (pg_range.rngtypid = typ.oid)
+    ) AS typ
+    LEFT JOIN pg_type AS elemtyp ON elemtyp.oid = elemtypoid
+    LEFT JOIN pg_class AS elemcls ON (elemcls.oid = elemtyp.typrelid)
+    LEFT JOIN pg_proc AS elemproc ON elemproc.oid = elemtyp.typreceive
+) AS typ_and_elem_type
+JOIN pg_namespace AS ns ON (ns.oid = typnamespace)
+WHERE
+    typtype IN ('b', 'r', 'e', 'd') OR -- Base, range, enum, domain
+    (typtype = 'c' AND relkind='c') OR -- User-defined free-standing composites (not table composites) by default
+    (typtype = 'p' AND typname IN ('record', 'void')) OR -- Some special supported pseudo-types
+    (typtype = 'a' AND (  -- Array of...
+        elemtyptype IN ('b', 'r', 'e', 'd') OR -- Array of base, range, enum, domain
+        (elemtyptype = 'p' AND elemtypname IN ('record', 'void')) OR -- Arrays of special supported pseudo-types
+        (elemtyptype = 'c' AND elemrelkind='c') -- Array of user-defined free-standing composites (not table composites) by default
+    ))
+ORDER BY ord
+	-- Load field definitions for (free-standing) composite types
+SELECT typ.oid, att.attname, att.atttypid
+FROM pg_type AS typ
+JOIN pg_namespace AS ns ON (ns.oid = typ.typnamespace)
+JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+JOIN pg_attribute AS att ON (att.attrelid = typ.typrelid)
+WHERE
+  (typ.typtype = 'c' AND cls.relkind='c') AND
+  attnum > 0 AND     -- Don't load system attributes
+  NOT attisdropped
+ORDER BY typ.oid, att.attnum
+	-- Load enum fields
+SELECT pg_type.oid, enumlabel
+FROM pg_enum
+JOIN pg_type ON pg_type.oid=enumtypid
+ORDER BY oid, enumsortorder
+
+22:38:28.3828 INF bd_pg Query duration time: 151ms
+22:38:28.3828 INF bd_pg Query duration high water mark is now 151
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:38:28.3828 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:38:29.3829 INF bd_pg Connection opened (multiplexing)
+22:38:29.3829 INF bd_pg Connection opened (multiplexing)
+22:38:29.3829 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < $1
+
+22:38:29.3829 INF bd_pg Executing statement(s):
+	select * from outgoing_email_queue 
+                where oq_sending_attempt_count < $1
+                order by oq_id desc
+
+22:38:29.3829 INF bd_pg Query duration time: 5ms
+22:38:29.3829 INF bd_pg Connection closed
+22:38:29.3829 INF bd 7 SQL 3:delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < @date
+22:38:29.3829 INF bd 7 @date=12/18/2020 10:38:29 PM
+22:38:29.3829 INF bd_pg Connection opened (multiplexing)
+22:38:29.3829 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < $1
+
+22:38:29.3829 INF bd_pg Query duration time: 0ms
+22:38:29.3829 INF bd_pg Connection closed
+22:38:29.3829 INF bd_pg Query duration time: 25ms
+22:38:29.3829 INF bd_pg Connection closed
+22:38:38.3838 INF bd 1 config:
+22:38:38.3838 INF bd 1 DbServer=127.0.0.1
+22:38:38.3838 INF bd 1 DbDatabase=keep
+22:38:38.3838 INF bd 1 DbUser=postgres
+22:38:38.3838 INF bd 1 DbPassword=password
+22:38:38.3838 INF bd 1 SmtpHost=smtp.mail.yahoo.com
+22:38:38.3838 INF bd 1 SmtpPort=587
+22:38:38.3838 INF bd 1 SmtpUser=ctrager_smtp@yahoo.com
+22:38:38.3838 INF bd 1 SmtpPassword=pmuzvdbljsxxkddl
+22:38:38.3838 INF bd 1 WebsiteUrlRootWithoutSlash=http://localhost:5000
+22:38:38.3838 INF bd 1 EnableIncomingEmail=1
+22:38:38.3838 INF bd 1 ImapHost=imap.mail.yahoo.com
+22:38:38.3838 INF bd 1 ImapPort=993
+22:38:38.3838 INF bd 1 ImapUser=ctrager_smtp@yahoo.com
+22:38:38.3838 INF bd 1 ImapPassword=pmuzvdbljsxxkddl
+22:38:38.3838 INF bd 1 CustomFieldEnabled1=1
+22:38:38.3838 INF bd 1 CustomFieldLabelSingular1=Status
+22:38:38.3838 INF bd 1 CustomFieldLabelPlural1=Statuses
+22:38:38.3838 INF bd 1 CustomFieldEnabled2=1
+22:38:38.3838 INF bd 1 CustomFieldLabelSingular2=Priority
+22:38:38.3838 INF bd 1 CustomFieldLabelPlural2=Priorities
+22:38:38.3838 INF bd 1 CustomFieldEnabled3=0
+22:38:38.3838 INF bd 1 CustomFieldLabelSingular3=Color
+22:38:38.3838 INF bd 1 CustomFieldLabelPlural3=Colors
+22:38:38.3838 INF bd 1 CustomFieldEnabled4=1
+22:38:38.3838 INF bd 1 CustomFieldLabelSingular4=Category
+22:38:38.3838 INF bd 1 CustomFieldLabelPlural4=Categories
+22:38:38.3838 INF bd 1 CustomFieldEnabled5=0
+22:38:38.3838 INF bd 1 CustomFieldLabelSingular5=Five
+22:38:38.3838 INF bd 1 CustomFieldLabelPlural5=Fives
+22:38:38.3838 INF bd 1 CustomFieldEnabled6=0
+22:38:38.3838 INF bd 1 CustomFieldLabelSingular6=Six
+22:38:38.3838 INF bd 1 CustomFieldLabelPlural6=Sixes
+22:38:38.3838 INF bd 1 AppName=keep Dev
+22:38:38.3838 INF bd 1 OutgoingEmailDisplayName=keep Team
+22:38:38.3838 INF bd 1 IssueEmailPreamble=Reply to this email directly or view issue on keep at $URL
+22:38:38.3838 INF bd 1 UseCustomCss=0
+22:38:38.3838 INF bd 1 CustomCssFilename=custom_css_example.css
+22:38:38.3838 INF bd 1 LogFileFolder=keep_logs
+22:38:38.3838 INF bd 1 RowsPerPage=30
+22:38:38.3838 INF bd 1 NewUserStartsInactive=0
+22:38:38.3838 INF bd 1 NewUserStartsReportOnly=0
+22:38:38.3838 INF bd 1 DateFormat=yyyy-MM-dd HH:mm
+22:38:38.3838 INF bd 1 UseDeveloperExceptionPage=1
+22:38:38.3838 INF bd 1 EnableIncomingEmailIssueCreation=1
+22:38:38.3838 INF bd 1 DebugSkipSendingEmails=0
+22:38:38.3838 INF bd 1 MaxNumberOfSendingRetries=3
+22:38:38.3838 INF bd 1 SecondsToSleepAfterCheckingIncomingEmail=300
+22:38:38.3838 INF bd 1 RegistrationRequestExpirationInHours=1
+22:38:38.3838 INF bd 1 InviteUserExpirationInHours=48
+22:38:38.3838 INF bd 1 DebugAutoConfirmRegistration=0
+22:38:38.3838 INF bd 1 CheckForDangerousSqlKeywords=1
+22:38:38.3838 INF bd 1 DangerousSqlKeywords=alter,copy,create,createdb,createrole,createuser,delete,drop,exec,execute,grant,insert,update
+22:38:38.3838 INF bd 1 DebugEnableRunSql=1
+22:38:38.3838 INF bd 1 DebugSkipDeleteOfIncomingEmails=1
+22:38:38.3838 INF bd 1 DebugPathToEmailFile=
+22:38:38.3838 INF bd 1 DebugFolderToSaveEmails=
+22:38:38.3838 INF bd 1 DebugLogLevelMicrosoft=3
+22:38:38.3838 INF bd 1 DebugLogLevelkeep=2
+22:38:38.3838 INF bd 1 DebugLogLevelPostgres=2
+22:38:38.3838 INF  Starting host
+22:38:38.3838 INF bd 1 Startup
+22:38:38.3838 INF bd 1 appsettings.json
+22:38:38.3838 INF bd 1 ConfigureServices
+22:38:38.3838 INF bd 6 SQL 1:select * from outgoing_email_queue 
+                where oq_sending_attempt_count < @max_retries
+                order by oq_id desc
+22:38:38.3838 INF bd 6 @max_retries=3
+22:38:38.3838 INF bd 7 SQL 2:delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < @date
+22:38:38.3838 INF bd 7 @date=12/20/2020 9:38:38 PM
+22:38:38.3838 INF bd 1 Configure
+22:38:39.3839 INF bd_pg Executing statement(s):
+	
+SELECT version()
+	SELECT ns.nspname, typ_and_elem_type.*,
+   CASE
+       WHEN typtype IN ('b', 'e', 'p') THEN 0           -- First base types, enums, pseudo-types
+       WHEN typtype = 'r' THEN 1                        -- Ranges after
+       WHEN typtype = 'c' THEN 2                        -- Composites after
+       WHEN typtype = 'd' AND elemtyptype <> 'a' THEN 3 -- Domains over non-arrays after
+       WHEN typtype = 'a' THEN 4                        -- Arrays before
+       WHEN typtype = 'd' AND elemtyptype = 'a' THEN 5  -- Domains over arrays last
+    END AS ord
+FROM (
+    -- Arrays have typtype=b - this subquery identifies them by their typreceive and converts their typtype to a
+    -- We first do this for the type (innerest-most subquery), and then for its element type
+    -- This also returns the array element, range subtype and domain base type as elemtypoid
+    SELECT
+        typ.oid, typ.typnamespace, typ.typname, typ.typtype, typ.typrelid, typ.typnotnull, typ.relkind,
+        elemtyp.oid AS elemtypoid, elemtyp.typname AS elemtypname, elemcls.relkind AS elemrelkind,
+        CASE WHEN elemproc.proname='array_recv' THEN 'a' ELSE elemtyp.typtype END AS elemtyptype
+    FROM (
+        SELECT typ.oid, typnamespace, typname, typrelid, typnotnull, relkind, typelem AS elemoid,
+            CASE WHEN proc.proname='array_recv' THEN 'a' ELSE typ.typtype END AS typtype,
+            CASE
+                WHEN proc.proname='array_recv' THEN typ.typelem
+                WHEN typ.typtype='r' THEN rngsubtype
+                WHEN typ.typtype='d' THEN typ.typbasetype
+            END AS elemtypoid
+        FROM pg_type AS typ
+        LEFT JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+        LEFT JOIN pg_proc AS proc ON proc.oid = typ.typreceive
+        LEFT JOIN pg_range ON (pg_range.rngtypid = typ.oid)
+    ) AS typ
+    LEFT JOIN pg_type AS elemtyp ON elemtyp.oid = elemtypoid
+    LEFT JOIN pg_class AS elemcls ON (elemcls.oid = elemtyp.typrelid)
+    LEFT JOIN pg_proc AS elemproc ON elemproc.oid = elemtyp.typreceive
+) AS typ_and_elem_type
+JOIN pg_namespace AS ns ON (ns.oid = typnamespace)
+WHERE
+    typtype IN ('b', 'r', 'e', 'd') OR -- Base, range, enum, domain
+    (typtype = 'c' AND relkind='c') OR -- User-defined free-standing composites (not table composites) by default
+    (typtype = 'p' AND typname IN ('record', 'void')) OR -- Some special supported pseudo-types
+    (typtype = 'a' AND (  -- Array of...
+        elemtyptype IN ('b', 'r', 'e', 'd') OR -- Array of base, range, enum, domain
+        (elemtyptype = 'p' AND elemtypname IN ('record', 'void')) OR -- Arrays of special supported pseudo-types
+        (elemtyptype = 'c' AND elemrelkind='c') -- Array of user-defined free-standing composites (not table composites) by default
+    ))
+ORDER BY ord
+	-- Load field definitions for (free-standing) composite types
+SELECT typ.oid, att.attname, att.atttypid
+FROM pg_type AS typ
+JOIN pg_namespace AS ns ON (ns.oid = typ.typnamespace)
+JOIN pg_class AS cls ON (cls.oid = typ.typrelid)
+JOIN pg_attribute AS att ON (att.attrelid = typ.typrelid)
+WHERE
+  (typ.typtype = 'c' AND cls.relkind='c') AND
+  attnum > 0 AND     -- Don't load system attributes
+  NOT attisdropped
+ORDER BY typ.oid, att.attnum
+	-- Load enum fields
+SELECT pg_type.oid, enumlabel
+FROM pg_enum
+JOIN pg_type ON pg_type.oid=enumtypid
+ORDER BY oid, enumsortorder
+
+22:38:39.3839 INF bd_pg Query duration time: 118ms
+22:38:39.3839 INF bd_pg Query duration high water mark is now 118
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name hstore was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name lquery was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name ltree was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name ltxtquery was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name citext was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:38:39.3839 INF bd_pg A PostgreSQL type with the name unknown was not found in the database
+22:38:39.3839 INF bd_pg Connection opened (multiplexing)
+22:38:39.3839 INF bd_pg Connection opened (multiplexing)
+22:38:39.3839 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = false and rr_created_date < $1
+
+22:38:39.3839 INF bd_pg Executing statement(s):
+	select * from outgoing_email_queue 
+                where oq_sending_attempt_count < $1
+                order by oq_id desc
+
+22:38:39.3839 INF bd_pg Query duration time: 3ms
+22:38:39.3839 INF bd_pg Connection closed
+22:38:39.3839 INF bd 7 SQL 3:delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < @date
+22:38:39.3839 INF bd 7 @date=12/18/2020 10:38:39 PM
+22:38:39.3839 INF bd_pg Connection opened (multiplexing)
+22:38:39.3839 INF bd_pg Executing statement(s):
+	delete from registration_requests 
+                where rr_is_invitation = true and rr_created_date < $1
+
+22:38:39.3839 INF bd_pg Query duration time: 1ms
+22:38:39.3839 INF bd_pg Connection closed
+22:38:39.3839 INF bd_pg Query duration time: 24ms
+22:38:39.3839 INF bd_pg Connection closed
+22:38:41.3841 INF bd 11 Startup.cs URL: http://localhost:5000/About
+22:38:41.3841 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /About responded 200 in 176.6130 ms
+22:38:43.3843 INF bd 10 Startup.cs URL: http://localhost:5000/Index
+22:38:43.3843 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Index responded 302 in 16.3044 ms
+22:38:43.3843 INF bd 12 Startup.cs URL: http://localhost:5000/App/Issues
+22:38:43.3843 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /App/Issues responded 302 in 0.3497 ms
+22:38:43.3843 INF bd 4 Startup.cs URL: http://localhost:5000/Login
+22:38:43.3843 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Login responded 200 in 92.8489 ms
