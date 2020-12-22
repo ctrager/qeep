@@ -1,5 +1,5 @@
-keep_config_active.txt
-budoco_logs/
+keep_config_active.tx
+keep_logs/
 obj/
 bin/
 data/
