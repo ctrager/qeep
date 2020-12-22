@@ -21,6 +21,7 @@ namespace keep.Pages
             public string text { get; set; }
             public int position { get; set; }
             public string color { get; set; }
+            public string timestamp { get; set; }
             public override string ToString()
             {
                 return id
@@ -30,14 +31,32 @@ namespace keep.Pages
             }
         };
 
-        class Payload
+        public class PayloadIn
         {
-            public string result { get; set; }
-            public string error_reason { get; set; }
+            public string username { get; set; }
+            public string password { get; set; }
+            public string timestamp { get; set; }
+            public Note[] notes { get; set; }
         }
 
-        public JsonResult OnGet()
+        public class PayloadOut
         {
+            public string result { get; set; }
+            public string reason { get; set; }
+            public string timestamp { get; set; }
+            public Note[] notes { get; set; }
+        }
+
+        public JsonResult OnPost([FromBody] PayloadIn request)
+        {
+            kp_util.log(request.username);
+            kp_util.log(request.notes.Length.ToString());
+
+            var response = new PayloadOut();
+
+            response.result = "ok";
+            response.reason = "";
+
             var list = new List<Note>();
 
             for (int i = 0; i < 3; i++)
@@ -50,26 +69,9 @@ namespace keep.Pages
                 list.Add(note);
             }
 
-            return new JsonResult(list.ToArray());
-        }
+            response.notes = list.ToArray();
 
-
-        public JsonResult OnPost([FromBody] Note[] notes)
-        {
-            var list = new List<Note>();
-
-            //kp_util.log("notes len:" + notes.Length.ToString());
-
-            // foreach (Note note in notes)
-            // {
-            //     kp_util.log(note.ToString());
-            // }
-
-            var payload = new Payload();
-            payload.result = "ok";
-            payload.error_reason = notes.Length.ToString();
-
-            return new JsonResult(payload);
+            return new JsonResult(response);
         }
     }
 }
