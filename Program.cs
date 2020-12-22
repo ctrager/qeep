@@ -19,20 +19,18 @@ namespace keep
             Console.WriteLine("Main"); // here on purpose
 
             // We have to load_config first to get Serilog's folder
-            bd_config.load_config();
+            kp_config.load_config();
 
-            string log_file_location = bd_config.get(bd_config.LogFileFolder) + "/keep_log_.txt";
+            string log_file_location = kp_config.get(kp_config.LogFileFolder) + "/keep_log_.txt";
 
-            LogEventLevel microsoft_level = (LogEventLevel)bd_config.get(bd_config.DebugLogLevelMicrosoft);
-            LogEventLevel keep_lovel = (LogEventLevel)bd_config.get(bd_config.DebugLogLevelkeep);
-            LogEventLevel postgres_level = (LogEventLevel)bd_config.get(bd_config.DebugLogLevelPostgres);
+            LogEventLevel microsoft_level = (LogEventLevel)kp_config.get(kp_config.DebugLogLevelMicrosoft);
+            LogEventLevel keep_level = (LogEventLevel)kp_config.get(kp_config.DebugLogLevelKeep);
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
 
                 .MinimumLevel.Override("Microsoft", microsoft_level)
-                .MinimumLevel.Override("bd", keep_lovel)
-                .MinimumLevel.Override("bd_pg", postgres_level)
+                .MinimumLevel.Override("bd", keep_level)
 
                 .Enrich.FromLogContext()
                 .WriteTo.Console(outputTemplate:
@@ -44,11 +42,11 @@ namespace keep
                 .CreateLogger();
 
             // We have to do this after the Serilog setup.
-            bd_util.init_serilog_context();
+            kp_util.init_serilog_context();
 
             // Write config to log, even though keep can pick up most changes without
             // being restarted and we don't log the changed values.
-            bd_config.log_config();
+            kp_config.log_config();
 
             try
             {

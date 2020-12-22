@@ -38,76 +38,14 @@ namespace keep
     */
 
 
-    public static class bd_config
+    public static class kp_config
     {
-
-        public const string DbServer = "DbServer";
-        public const string DbDatabase = "DbDatabase";
-        public const string DbUser = "DbUser";
-        public const string DbPassword = "DbPassword";
-        public const string DebugSkipSendingEmails = "DebugSkipSendingEmails";
-        public const string SmtpHost = "SmtpHost";
-        public const string SmtpPort = "SmtpPort";
-        public const string SmtpUser = "SmtpUser";
-        public const string SmtpPassword = "SmtpPassword";
-        public const string ImapHost = "ImapHost";
-        public const string ImapPort = "ImapPort";
-        public const string ImapUser = "ImapUser";
-        public const string ImapPassword = "ImapPassword";
-        public const string OutgoingEmailDisplayName = "OutgoingEmailDisplayName";
-        public const string UseDeveloperExceptionPage = "UseDeveloperExceptionPage";
-        public const string WebsiteUrlRootWithoutSlash = "WebsiteUrlRootWithoutSlash";
-        public const string AppName = "AppName";
-        public const string UseCustomCss = "UseCustomCss";
-        public const string CustomCssFilename = "CustomCssFilename";
-        public const string RowsPerPage = "RowsPerPage";
         public const string LogFileFolder = "LogFileFolder";
-        public const string DateFormat = "DateFormat";
-        public const string NewUserStartsInactive = "NewUserStartsInactive";
-        public const string NewUserStartsReportOnly = "NewUserStartsReportOnly";
-        public const string DebugAutoConfirmRegistration = "DebugAutoConfirmRegistration";
-        public const string DebugEnableRunSql = "DebugEnableRunSql";
-        public const string MaxNumberOfSendingRetries = "MaxNumberOfSendingRetries";
-        public const string EnableIncomingEmail = "EnableIncomingEmail";
-        public const string SecondsToSleepAfterCheckingIncomingEmail = "SecondsToSleepAfterCheckingIncomingEmail";
-        public const string DebugSkipDeleteOfIncomingEmails = "DebugSkipDeleteOfIncomingEmails";
-        public const string DebugPathToEmailFile = "DebugPathToEmailFile";
-        public const string CheckForDangerousSqlKeywords = "CheckForDangerousSqlKeywords";
-        public const string DangerousSqlKeywords = "DangerousSqlKeywords";
-        public const string DebugFolderToSaveEmails = "DebugFolderToSaveEmails";
-
-        public const string CustomFieldEnabled1 = "CustomFieldEnabled1";
-        public const string CustomFieldLabelSingular1 = "CustomFieldLabelSingular1";
-        public const string CustomFieldLabelPlural1 = "CustomFieldLabelPlural1";
-
-        public const string CustomFieldEnabled2 = "CustomFieldEnabled2";
-        public const string CustomFieldLabelSingular2 = "CustomFieldLabelSingular2";
-        public const string CustomFieldLabelPlural2 = "CustomFieldLabelPlural2";
-
-        public const string CustomFieldEnabled3 = "CustomFieldEnabled3";
-        public const string CustomFieldLabelSingular3 = "CustomFieldLabelSingular3";
-        public const string CustomFieldLabelPlural3 = "CustomFieldLabelPlural3";
-
-        public const string CustomFieldEnabled4 = "CustomFieldEnabled4";
-        public const string CustomFieldLabelSingular4 = "CustomFieldLabelSingular4";
-        public const string CustomFieldLabelPlural4 = "CustomFieldLabelPlural4";
-
-        public const string CustomFieldEnabled5 = "CustomFieldEnabled5";
-        public const string CustomFieldLabelSingular5 = "CustomFieldLabelSingular5";
-        public const string CustomFieldLabelPlural5 = "CustomFieldLabelPlural5";
-
-        public const string CustomFieldEnabled6 = "CustomFieldEnabled6";
-        public const string CustomFieldLabelSingular6 = "CustomFieldLabelSingular6";
-        public const string CustomFieldLabelPlural6 = "CustomFieldLabelPlural6";
-
-        public const string RegistrationRequestExpirationInHours = "RegistrationRequestExpirationInHours";
-        public const string InviteUserExpirationInHours = "InviteUserExpirationInHours";
-        public const string IssueEmailPreamble = "IssueEmailPreamble";
-        public const string EnableIncomingEmailIssueCreation = "EnableIncomingEmailIssueCreation";
         public const string DebugLogLevelMicrosoft = "DebugLogLevelMicrosoft";
-        public const string DebugLogLevelkeep = "DebugLogLevelkeep";
-        public const string DebugLogLevelPostgres = "DebugLogLevelPostgres";
+        public const string DebugLogLevelKeep = "DebugLogLevelKeep";
+        public const string UseDeveloperExceptionPage = "UseDeveloperExceptionPage";
 
+   
         static Dictionary<string, dynamic> dict = new Dictionary<string, dynamic>();
 
         // This reads "keep_config.txt" and loads it into a key/value pair
@@ -185,17 +123,17 @@ namespace keep
                 } // end for each line
                 DateTime time2 = DateTime.Now;
                 TimeSpan timespan = time2 - time1;
-                bd_util.log("bd_config.load_config() milliseconds: " + timespan.TotalMilliseconds.ToString());
+                kp_util.log("bd_config.load_config() milliseconds: " + timespan.TotalMilliseconds.ToString());
 
             } // end lock
         }
 
         public static void log_config()
         {
-            bd_util.log("config:");
+            kp_util.log("config:");
             foreach (var k in dict.Keys)
             {
-                bd_util.log(k + "=" + dict[k].ToString());
+                kp_util.log(k + "=" + dict[k].ToString());
             }
         }
 

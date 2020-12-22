@@ -15603,26 +15603,6 @@
   "RootNamespace": "keep_server",
   "Documents": [
     {
-      "FilePath": "/home/corey/github/keep_server/Pages/Admin/Admin.cshtml",
-      "TargetPath": "Pages\\Admin\\Admin.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_CrudDataTableCustomPartial.cshtml",
-      "TargetPath": "Pages\\Shared\\_CrudDataTableCustomPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/RegisterPleaseConfirm.cshtml",
-      "TargetPath": "Pages\\RegisterPleaseConfirm.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Login.cshtml",
-      "TargetPath": "Pages\\Login.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "/home/corey/github/keep_server/Pages/About.cshtml",
       "TargetPath": "Pages\\About.cshtml",
       "FileKind": "mvc"
@@ -15633,33 +15613,8 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/home/corey/github/keep_server/Pages/Admin/EmailQueue.cshtml",
-      "TargetPath": "Pages\\Admin\\EmailQueue.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "/home/corey/github/keep_server/Pages/_ViewImports.cshtml",
       "TargetPath": "Pages\\_ViewImports.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Admin/User.cshtml",
-      "TargetPath": "Pages\\Admin\\User.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_FlashPartial.cshtml",
-      "TargetPath": "Pages\\Shared\\_FlashPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_CrudDataTableWithDeletePartial.cshtml",
-      "TargetPath": "Pages\\Shared\\_CrudDataTableWithDeletePartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Admin/Users.cshtml",
-      "TargetPath": "Pages\\Admin\\Users.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15668,78 +15623,13 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/home/corey/github/keep_server/Pages/_ViewStart.cshtml",
-      "TargetPath": "Pages\\_ViewStart.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_layout_signed_out.cshtml",
-      "TargetPath": "Pages\\Shared\\_layout_signed_out.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/ResetPassword.cshtml",
-      "TargetPath": "Pages\\ResetPassword.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_layout_logged_in.cshtml",
-      "TargetPath": "Pages\\Shared\\_layout_logged_in.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/ResetPasswordRequest.cshtml",
-      "TargetPath": "Pages\\ResetPasswordRequest.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Admin/PendingUsers.cshtml",
-      "TargetPath": "Pages\\Admin\\PendingUsers.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_ValidationScriptsPartial.cshtml",
-      "TargetPath": "Pages\\Shared\\_ValidationScriptsPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_CrudDataTablePartial.cshtml",
-      "TargetPath": "Pages\\Shared\\_CrudDataTablePartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Register.cshtml",
-      "TargetPath": "Pages\\Register.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Admin/Logs.cshtml",
-      "TargetPath": "Pages\\Admin\\Logs.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_PlainDataTablePartial.cshtml",
-      "TargetPath": "Pages\\Shared\\_PlainDataTablePartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/RegisterConfirmation.cshtml",
-      "TargetPath": "Pages\\RegisterConfirmation.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Stop.cshtml",
-      "TargetPath": "Pages\\Stop.cshtml",
+      "FilePath": "/home/corey/github/keep_server/Pages/Notes.cshtml",
+      "TargetPath": "Pages\\Notes.cshtml",
       "FileKind": "mvc"
     },
     {
       "FilePath": "/home/corey/github/keep_server/Pages/TestError.cshtml",
       "TargetPath": "Pages\\TestError.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "/home/corey/github/keep_server/Pages/Shared/_unused_Layout.cshtml",
-      "TargetPath": "Pages\\Shared\\_unused_Layout.cshtml",
       "FileKind": "mvc"
     }
   ],

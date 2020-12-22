@@ -38,10 +38,6 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
-            "EmailValidation": {
-              "target": "Package",
-              "version": "[1.0.4, )"
-            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[5.0.0, )"
@@ -55,14 +51,6 @@
               "version": "[4.8.2, )"
             },
             "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[5.0.0, )"
-            },
-            "mailkit": {
-              "target": "Package",
-              "version": "[2.9.0, )"
-            },
-            "npgsql": {
               "target": "Package",
               "version": "[5.0.0, )"
             }

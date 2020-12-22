@@ -114,10 +114,6 @@ OutgoingEmailDisplayName: keep Team
 # $URL will be replaced by WebsiteUrlRootWithoutSlash above followed by /Issue?id=
 IssueEmailPreamble: Reply to this email directly or view issue on keep at $URL
 
-# Your css. To use this you would need to understand how to work with css
-# and then write css that overrides keep.css
-UseCustomCss: 0
-CustomCssFilename: custom_css_example.css
 
 LogFileFolder: keep_logs
 

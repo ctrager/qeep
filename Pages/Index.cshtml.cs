@@ -16,7 +16,7 @@ namespace keep.Pages
         {
 
             // logged in so, redirect to main issues list
-            Response.Redirect("/App/Issues");
+            Response.Redirect("/Keep");
 
         }
     }

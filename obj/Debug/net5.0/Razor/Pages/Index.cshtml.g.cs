@@ -6,8 +6,11 @@ namespace keep.Pages
 {
     #line hidden
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
@@ -16,64 +19,8 @@ using keep;
 #line default
 #line hidden
 #nullable disable
-#nullable restore
-#line 2 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using System.Data.SqlClient;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 3 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using System.Data;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 4 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using System.Data.Common;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 5 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using System.Collections.Generic;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 6 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using Microsoft.AspNetCore.Http;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 7 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using Microsoft.AspNetCore.Mvc;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 8 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 9 "/home/corey/github/keep_server/Pages/_ViewImports.cshtml"
-using Microsoft.AspNetCore.Mvc.Rendering;
-
-#line default
-#line hidden
-#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"e65f502c0e0b88bc9ac6b074f2111cf3b4cac1d0", @"/Pages/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"6aea85d16373da7f52ed5e0bde6d1baf48aa57c7", @"/Pages/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"a4577ca97fc0f40ca65ed1565f0d25145335ba45", @"/Pages/_ViewImports.cshtml")]
     public class Pages_Index : global::Microsoft.AspNetCore.Mvc.RazorPages.Page
     {
         #pragma warning disable 1998

@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.Extensions;
 using Serilog;
 using Microsoft.AspNetCore.HttpOverrides;
-using Npgsql.Logging;
 
 namespace keep
 {
@@ -15,18 +14,8 @@ namespace keep
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            bd_util.log("Startup");
+            kp_util.log("Startup");
             Configuration = configuration;
-
-            bd_util.log(Configuration["keep:DebugWhatEnvIsThis"]);
-
-            //NpgsqlLogManager.Provider = new ConsoleLoggingProvider(NpgsqlLogLevel.Debug, false, false);
-            NpgsqlLogManager.Provider = new keep_pg.bd_pg_log_provider();
-
-            // If there are pending outgoing emails try to send them.
-            bd_email.spawn_email_sending_thread();
-
-            bd_email.spawn_registration_request_expiration_thread();
 
         }
 
@@ -35,7 +24,7 @@ namespace keep
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            bd_util.log("ConfigureServices");
+            kp_util.log("ConfigureServices");
 
             // services.AddDistributedMemoryCache();
 
@@ -65,8 +54,18 @@ namespace keep
             //     options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
             // });
 
-            // for screenshots
-            //services.AddCors();
+
+            services.AddCors(options =>
+                {
+                    options.AddPolicy("CoreyPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    }
+                    );
+                });
 
 
             // services.Configure<ApiBehaviorOptions>(options =>
@@ -81,9 +80,9 @@ namespace keep
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            bd_util.log("Configure");
+            kp_util.log("Configure");
 
-            //app.UseCors();
+            app.UseCors("CoreyPolicy");
 
             // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-5.0
             // for nginx
@@ -94,7 +93,7 @@ namespace keep
 
             //if (env.IsDevelopment())
             //{
-            if (bd_config.get(bd_config.UseDeveloperExceptionPage) == 1)
+            if (kp_config.get(kp_config.UseDeveloperExceptionPage) == 1)
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -122,15 +121,10 @@ namespace keep
             app.Use(async (context, next) =>
             {
 
-                bd_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
+                kp_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
 
-                bool allowed = bd_util.check_user_permissions(context);
+                await next.Invoke();
 
-                if (allowed)
-                {
-                    bd_db.query_count = 0; // just to see how many queries we do on busy pages. Not threadsafe, but doesn't matter.
-                    await next.Invoke();
-                }
             });
 
             app.UseEndpoints(endpoints =>
