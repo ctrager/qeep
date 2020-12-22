@@ -2,3 +2,4 @@ keep_config_active.txt
 budoco_logs/
 obj/
 bin/
+data/

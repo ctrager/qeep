@@ -1893,3 +1893,12 @@ System.NullReferenceException: Object reference not set to an instance of an obj
 11:30:25.3025 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP GET /Notes responded 200 in 98.4899 ms
 11:30:30.3030 INF bd 9 Startup.cs URL: http://corey1.com:5000/Notes
 11:30:30.3030 INF Serilog.AspNetCore.RequestLoggingMiddleware HTTP POST /Notes responded 200 in 25.7457 ms
+12:11:30.1130 INF bd 1 config:
+12:11:31.1131 INF bd 1 LogFileFolder=keep_logs
+12:11:31.1131 INF bd 1 UseDeveloperExceptionPage=1
+12:11:31.1131 INF bd 1 DebugLogLevelMicrosoft=4
+12:11:31.1131 INF bd 1 DebugLogLevelKeep=2
+12:11:31.1131 INF  Starting host
+12:11:31.1131 INF bd 1 Startup
+12:11:31.1131 INF bd 1 ConfigureServices
+12:11:31.1131 INF bd 1 Configure
