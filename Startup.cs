@@ -121,8 +121,7 @@ namespace keep
             app.Use(async (context, next) =>
             {
 
-                kp_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
-
+                //kp_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
                 await next.Invoke();
 
             });
