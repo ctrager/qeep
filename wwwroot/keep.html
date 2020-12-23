@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>Keep (Corey's Keep)</title>
+
+<style>
+    body,
+    div,
+    span,
+    s input,
+    select,
+    textarea,
+    button {
+        font-size: 16px;
+    }
+
+    .note,
+    .note_template {
+        display: inline-block;
+        background: transparent;
+        order: 0;
+        margin: 10px;
+    }
+
+    .note_textarea {
+
+        /* for gap between textarea and footer */
+        vertical-align: top;
+
+        white-space: pre;
+
+        font-family: monospace;
+        font-size: 12px;
+        padding: 4px;
+        border: 1px solid black;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        overflow: auto;
+
+        min-width: 200px;
+        min-height: 100px;
+    }
+
+    .note_footer {
+        margin: 0px;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        padding: 5px;
+    }
+
+    .fake_link {
+        color: blue;
+        cursor: pointer;
+    }
+
+    .fake_link:hover {
+        color: red;
+        cursor: pointer;
+    }
+
+    .note_footer>span {
+        margin-left: 2px;
+        margin-right: 6px;
+    }
+
+    .popup {
+        display: none;
+        background-color: #eeeeee;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding: 3px;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 99px;
+    }
+
+    #color_select {
+        padding: 3px;
+        margin: 3px;
+    }
+
+    #position_input {
+        padding: 3px;
+        margin: 3px;
+    }
+
+    #notes_container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+</style>
+
+<head>
+</head>
+
+<body>
+    <div>Configure font, configure timing, echo user, show saving, show on/off line</div>
+
+    <div>
+        <span id="new_button" class="fake_link">New Note</span>
+        &nbsp;&nbsp;&nbsp;
+        <span id="export_button" class="fake_link">Export</span>
+    </div>
+    <div>
+        <button id="save_button">Save</button>
+        <button id="load_button">Load</button>
+    </div>
+
+    <div id="notes_container"></div>
+
+    <div id="position_popup" class="popup" data-note_id="">
+        <div class="popup_header">Position</div>
+        <input id="position_input" type="number" maxlength="2" min="0" max="99"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+        <div id="position_close" class="fake_link">Close</div>
+    </div>
+
+    <div id="color_popup" class="popup" data-note_id="">
+        <div class="popup_header">Color</div>
+        <select id="color_select">
+            <option value="lightskyblue" style="background-color: lightskyblue">Blue</option>
+            <option value="cyan" style="background-color: cyan">Cyan</option>
+            <option value="gold" style="background-color: gold">Gold</option>
+            <option value="palegreen" style="background-color: palegreen">Green</option>
+            <option value="orange" style="background-color: orange">Orange</option>
+            <option value="lightpink" style="background-color: lightpink">Pink</option>
+            <option value="violet" style="background-color: violet">Violet</option>
+            <option value="white" style="background-color: white">White</option>
+            <option value="yellow" style="background-color: yellow">Yellow</option>
+        </select>
+        <div id="color_close" class="fake_link">Close</div>
+    </div>
+
+    <div id="note_template" class="note_template" style="display:none">
+
+        <!--<div class="note_textarea" contentEditable></div>-->
+        <textarea class="note_textarea"></textarea>
+
+        <div class="note_footer">
+            <span class="fake_link position">Position</span>
+            <span class="fake_link color">Color</span>
+            <span class="fake_link delete">Delete</span>
+
+        </div>
+    </div>
+
+</body>
+<script>
+
+    var online = false
+    var url = "http://corey1.com:5000/Notes"
+    var username = "corey"
+    var password = "password"
+    var local_note_data
+    const NOTE_DATA = "note_data"
+    var seconds_before_save = 3
+    var data_source = ""
+
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+        load_notes()
+
+        get("new_button").addEventListener("click", create_new_note)
+        get("export_button").addEventListener("click", export_text)
+        get("save_button").addEventListener("click", save_notes)
+        get("load_button").addEventListener("click", load_notes)
+
+        get("position_input").addEventListener("change", change_position)
+        get("position_close").addEventListener("click", close_position_popup)
+        get("color_select").addEventListener("change", change_color)
+        get("color_close").addEventListener("click", close_color_popup)
+
+    });
+
+    // post to server so that it can decide whether our data is the 
+    // latest greatest or its data
+    function load_notes() {
+
+        local_note_data = JSON.parse(window.localStorage.getItem(NOTE_DATA))
+        console.log("load_notes", local_note_data)
+
+        if (local_note_data == null) {
+            local_note_data = {
+                timestamp: "1999", // so that we get what server has
+                notes: []
+            }
+        }
+
+        // server will give us the note data to render
+        post_to_server(true) // first time
+
+    }
+
+    function post_to_server(first_time) {
+        var request_payload = {
+            username: username,
+            password: password,
+            timestamp: local_note_data.timestamp,
+            notes: local_note_data.notes
+        }
+
+        var request = new XMLHttpRequest();
+
+        // DONE == 4
+        request.onreadystatechange = function () {
+            console.log("onreadystatechange state, status", request.readyState, request.status)
+            if (request.readyState == XMLHttpRequest.DONE) {
+
+                if (request.status == 200) {
+                    data_source = "server"
+                    var response_payload = JSON.parse(request.responseText)
+
+                    if (local_note_data.timestamp != response_payload.timestamp) {
+
+                        console.log("using server data instead of our data")
+                        console.log(local_note_data.timestamp)
+                        console.log(response_payload.timestamp)
+
+                        // sync ourselves to server
+                        local_note_data.timestamp = response_payload.timestamp
+                        local_note_data.notes = response_payload.notes
+
+                        if (!first_time) {
+                            alert("resyncing stale local data with server")
+
+                            // some other client updated server, so we were
+                            // working with stale data. Resync with server
+                            window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+                            get("notes_container").innerHTML = ""
+                            build_notes_from_object_array(local_note_data.notes)
+                        }
+                    }
+                }
+                else {
+                    data_source = "local"
+                }
+                console.log("data_source", data_source)
+
+                if (first_time) {
+                    // this might be data from the server, or this
+                    // might be data from local storage
+                    window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+                    build_notes_from_object_array(local_note_data.notes)
+                }
+
+            }
+        };
+
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-type", "application/json");
+
+        var json = JSON.stringify(request_payload)
+        console.log("posting", json)
+        request.send(JSON.stringify(request_payload));
+
+    }
+
+    function build_notes_from_object_array(notes_object_array) {
+
+        console.log("build_notes_from_object_array", notes_object_array)
+        if (notes_object_array != null) {
+            for (i = 0; i < notes_object_array.length; i++) {
+                var note_object = notes_object_array[i]
+                build_note(note_object)
+            }
+        }
+    }
+
+
+    function save_notes() {
+
+        console.log("save notes")
+
+        var note_elements = document.getElementsByClassName("note")
+
+        local_note_data.notes = []
+
+        for (i = 0; i < note_elements.length; i++) {
+            var note_el = note_elements[i]
+            var textarea = note_el.getElementsByClassName("note_textarea")[0]
+            var text = textarea.value
+
+            local_note_data.notes.push({
+                id: note_el.id,
+                text: text,
+                position: note_el.style.order,
+                color: textarea.style.backgroundColor
+            })
+        }
+
+        local_note_data.timestamp = get_now_as_string()
+        window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+
+        post_to_server(false) // NOT first time
+    }
+
+
+
+    function get(id) {
+        return document.getElementById(id)
+    }
+
+    function export_text() {
+        var note_elements = document.getElementsByClassName("note")
+        for (i = 0; i < note_elements.length; i++) {
+            var note_el = note_elements[i]
+            var textarea = note_el.getElementsByClassName("note_textarea")[0]
+            //var text = textarea.innerText
+            var text = textarea.value
+            console.log(note_el.id, text)
+            create_and_click_on_download_link("keep_" + note_el.id + ".txt", text)
+
+        }
+    }
+
+    function create_and_click_on_download_link(filename, text) {
+        var link = document.createElement('a');
+        link.setAttribute("download", filename)
+
+        link.setAttribute("href",
+            "data:text/plain;charset=utf-8," + encodeURIComponent(text))
+
+        document.body.appendChild(link);
+
+        // wait for the link to be added to the document, then "click" it
+        window.requestAnimationFrame(function () {
+            // clicking link
+            var event = new MouseEvent('click');
+            link.dispatchEvent(event);
+            document.body.removeChild(link);
+        })
+    }
+
+    function build_note(note_object) {
+        var template = get("note_template")
+        var note_el = template.cloneNode(true)
+        note_el.className = "note"
+
+        note_el.id = note_object.id
+        note_el.style.order = note_object.position
+
+        var textarea = note_el.getElementsByClassName("note_textarea")[0]
+        //textarea.innerText = note_object.text
+        textarea.value = note_object.text
+        textarea.style.backgroundColor = note_object.color
+
+        position_el = note_el.getElementsByClassName("position")[0]
+        position_el.addEventListener("click", show_position_popup)
+
+        color_el = note_el.getElementsByClassName("color")[0]
+        color_el.addEventListener("click", show_color_popup)
+
+        delete_el = note_el.getElementsByClassName("delete")[0]
+        delete_el.addEventListener("click", show_delete_confirmation)
+
+        textarea = note_el.getElementsByClassName("note_textarea")[0]
+        textarea.addEventListener("click", textarea_on_click)
+        textarea.addEventListener("input", textarea_on_input)
+
+        get("notes_container").appendChild(note_el)
+
+        note_el.style.display = "block"
+    }
+
+    function textarea_on_input(event) {
+        resize_textarea(event.target)
+    }
+
+    function textarea_on_click(event) {
+
+        var textarea_array = document.getElementsByClassName("note_textarea")
+        console.log("array len", textarea_array.length)
+        for (i = 0; i < textarea_array.length; i++) {
+
+            var textarea = textarea_array[i]
+
+            if (textarea.parentNode.id == event.target.parentNode.id) {
+
+                continue;
+            }
+            console.log(textarea.style.width)
+            textarea.style.width = "200px"
+            textarea.style.height = "100px"
+        }
+
+        resize_textarea(event.target)
+        close_all()
+    }
+
+    function resize_textarea(textarea) {
+
+        //console.log(textarea.scrollWidth, textarea.scrollHeight)
+
+        textarea.style.width = 0
+        textarea.style.width = textarea.scrollWidth + "px"
+
+        textarea.style.height = 0
+        textarea.style.height = textarea.scrollHeight + "px"
+
+        on_change()
+    }
+
+    var timer = null
+    function on_change() {
+        //console.log("handle_text_change")
+        if (timer != null) {
+            clearTimeout(timer)
+        }
+
+        // Save when the user is idle for N seconds
+        timer = setTimeout(save_notes, 1000 * seconds_before_save)
+    }
+
+
+    function create_new_note() {
+        build_note({
+            id: get_now_as_string(),
+            text: "",
+            position: 1,
+            color: "white"
+        })
+    }
+
+    function show_position_popup(event) {
+        close_all()
+        console.log("show_position_popup")
+        var popup = get("position_popup")
+        var note_el = event.target.parentNode.parentNode
+        popup.dataset.note_id = note_el.id
+        get("position_input").value = note_el.style.order
+        popup.style.display = "block"
+    }
+
+    function show_delete_confirmation() {
+        var confirmation = confirm("Are you sure you want to delete?")
+
+        if (!confirmation) {
+            return
+        }
+
+        var note_el = event.target.parentNode.parentNode
+        note_el.remove()
+        on_change()
+    }
+
+    function show_color_popup(event) {
+        close_all()
+        console.log("show_colorpopup")
+        var popup = get("color_popup")
+        var note_el = event.target.parentNode.parentNode
+        popup.dataset.note_id = note_el.id
+        var color_select = get("color_select")
+        var textarea = note_el.getElementsByClassName("note_textarea")[0]
+        color_select.value = textarea.style.backgroundColor
+        color_select.style.backgroundColor = textarea.style.backgroundColor
+        popup.style.display = "block"
+    }
+
+    function close_all() {
+        close_position_popup()
+        close_color_popup()
+    }
+
+    function close_position_popup() {
+        var popup = get("position_popup")
+        popup.style.display = "none"
+    }
+
+    function close_color_popup() {
+        var popup = get("color_popup")
+        popup.style.display = "none"
+    }
+
+    function change_position(event) {
+        console.log("change_position", event.target.value)
+        // get data from pop
+        var position = event.target.value
+        var id = event.target.parentNode.dataset.note_id
+        var node_el = get(id)
+        node_el.style.order = position
+        on_change()
+    }
+
+    function change_color(event) {
+        console.log("change_color")
+        // get data from pop
+        var color_select = event.target
+
+        var color = color_select.options[color_select.selectedIndex].value
+        var id = event.target.parentNode.dataset.note_id
+        var note_el = get(id)
+        var textarea = note_el.getElementsByClassName("note_textarea")[0]
+
+        textarea.style.backgroundColor = color
+        color_select.style.backgroundColor = color
+        on_change()
+    }
+
+    function get_now_as_string() {
+        var d = new Date()
+        var year = d.getUTCFullYear()
+        var month = d.getUTCMonth().toLocaleString("en-US", {minimumIntegerDigits: 2})
+        var day = d.getUTCDate().toLocaleString("en-US", {minimumIntegerDigits: 2})
+        var hour = d.getUTCHours().toLocaleString("en-US", {minimumIntegerDigits: 2})
+        var min = d.getUTCMinutes().toLocaleString("en-US", {minimumIntegerDigits: 2})
+        var sec = d.getUTCSeconds().toLocaleString("en-US", {minimumIntegerDigits: 2})
+        var mil = d.getUTCMilliseconds().toLocaleString("en-US", {minimumIntegerDigits: 3})
+
+        return year + month + day + "_" + hour + min + sec + "_" + mil
+    }
+
+
+</script>
+
+</htm>
