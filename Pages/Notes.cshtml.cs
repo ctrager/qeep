@@ -23,7 +23,7 @@ namespace keep.Pages
             public string text { get; set; }
             public int position { get; set; }
             public string color { get; set; }
-            public string timestamp { get; set; }
+            //public string timestamp { get; set; }
             public override string ToString()
             {
                 return id
@@ -43,7 +43,8 @@ namespace keep.Pages
         {
             public string username { get; set; }
             public string password { get; set; }
-            public string timestamp { get; set; }
+            public string server_timestamp { get; set; }
+            public string new_timestamp { get; set; }
             public Note[] notes { get; set; }
         }
 
@@ -97,26 +98,32 @@ namespace keep.Pages
             if (System.IO.File.Exists(path))
             {
                 kp_util.log("existing file");
+
                 // read data from file
                 string json = System.IO.File.ReadAllText(path);
                 note_data = JsonSerializer.Deserialize<NoteData>(json);
 
-                kp_util.log("timestamp cl:" + request.timestamp);
+                kp_util.log("timestamp cl:" + request.server_timestamp);
                 kp_util.log("timestamp sv:" + note_data.timestamp);
 
-                if (request.timestamp.CompareTo(note_data.timestamp) > 0)
+                if (request.server_timestamp.CompareTo(note_data.timestamp) == 0)
                 {
                     kp_util.log("using client data");
-                    note_data.timestamp = request.timestamp;
+
+                    // save client data as new server data
+                    note_data.timestamp = request.new_timestamp; // move forward
                     note_data.notes = (Note[])request.notes.Clone();
                     var client_json = JsonSerializer.Serialize(note_data);
                     System.IO.File.WriteAllText(path, client_json);
-                    response.timestamp = request.timestamp;
+
+                    // pass client data back to client
+                    response.timestamp = request.new_timestamp;
                     response.notes = request.notes;
                 }
                 else
                 {
                     kp_util.log("using server data");
+                    response.result = "resync";
                     response.timestamp = note_data.timestamp;
                     response.notes = note_data.notes;
                 }
@@ -127,7 +134,7 @@ namespace keep.Pages
                 // create new file
                 note_data = new NoteData();
                 // save
-                note_data.timestamp = request.timestamp;
+                note_data.timestamp = request.new_timestamp; // moving forward
                 note_data.notes = (Note[])request.notes.Clone();
 
                 var json = JsonSerializer.Serialize(note_data);
@@ -135,7 +142,7 @@ namespace keep.Pages
 
                 System.IO.File.WriteAllText(path, json);
 
-                response.timestamp = request.timestamp;
+                response.timestamp = request.new_timestamp;
                 response.notes = request.notes;
             }
 

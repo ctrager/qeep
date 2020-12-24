@@ -165,6 +165,7 @@
     var local_note_data
     const NOTE_DATA = "note_data"
     var seconds_before_save = 3
+    var seconds_before_poll = 12
     var data_source = ""
 
 
@@ -193,7 +194,8 @@
 
         if (local_note_data == null) {
             local_note_data = {
-                timestamp: "1999", // so that we get what server has
+                server_timestamp: "1999", // so that we get what server has
+                new_timestamp: "1999",
                 notes: []
             }
         }
@@ -207,7 +209,8 @@
         var request_payload = {
             username: username,
             password: password,
-            timestamp: local_note_data.timestamp,
+            server_timestamp: local_note_data.server_timestamp,
+            new_timestamp: local_note_data.new_timestamp,
             notes: local_note_data.notes
         }
 
@@ -221,25 +224,31 @@
                 if (request.status == 200) {
                     data_source = "server"
                     var response_payload = JSON.parse(request.responseText)
-
-                    if (local_note_data.timestamp != response_payload.timestamp) {
-
-                        console.log("using server data instead of our data")
-                        console.log(local_note_data.timestamp)
-                        console.log(response_payload.timestamp)
+                    console.log(response_payload)
+                    if (response_payload.result == "failure") {
+                        alert(response_payload.reason)
+                    }
+                    else {
+                        // ok or resync
 
                         // sync ourselves to server
-                        local_note_data.timestamp = response_payload.timestamp
+                        local_note_data.server_timestamp = response_payload.timestamp
+                        local_note_data.new_timestamp = response_payload.timestamp
                         local_note_data.notes = response_payload.notes
+                        window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
 
-                        if (!first_time) {
-                            alert("resyncing stale local data with server")
+                        if (response_payload.result == "resync") {
+                            console.log("using server data instead of our data")
 
-                            // some other client updated server, so we were
-                            // working with stale data. Resync with server
-                            window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
-                            get("notes_container").innerHTML = ""
-                            build_notes_from_object_array(local_note_data.notes)
+                            if (!first_time) {
+
+                                console.log("resyncing stale local data with server")
+
+                                // some other client updated server, so we were
+                                // working with stale data. Resync with server
+                                get("notes_container").innerHTML = ""
+                                build_notes_from_object_array(local_note_data.notes)
+                            }
                         }
                     }
                 }
@@ -255,6 +264,10 @@
                     build_notes_from_object_array(local_note_data.notes)
                 }
 
+                if (timer2 != null) {
+                    clearTimeout(timer2)
+                }
+                timer2 = setTimeout(function () {post_to_server(false)}, 1000 * seconds_before_poll)
             }
         };
 
@@ -300,13 +313,11 @@
             })
         }
 
-        local_note_data.timestamp = get_now_as_string()
+        local_note_data.new_timestamp = get_now_as_string()
         window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
 
-        post_to_server(false) // NOT first time
+        post_to_server(false, get_now_as_string()) // NOT first time
     }
-
-
 
     function get(id) {
         return document.getElementById(id)
@@ -412,15 +423,21 @@
         on_change()
     }
 
-    var timer = null
+    var timer1 = null
+    var timer2 = null
+
     function on_change() {
+
+        clearTimeout(timer2)
+
         //console.log("handle_text_change")
-        if (timer != null) {
-            clearTimeout(timer)
+        if (timer1 != null) {
+            clearTimeout(timer1)
         }
 
         // Save when the user is idle for N seconds
-        timer = setTimeout(save_notes, 1000 * seconds_before_save)
+        timer1 = setTimeout(save_notes, 1000 * seconds_before_save)
+
     }
 
 
