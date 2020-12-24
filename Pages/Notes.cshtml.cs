@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Text.Json;
-using System.Diagnostics;
-using Newtonsoft.Json.Serialization;
-using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace keep.Pages
 {
@@ -17,27 +12,6 @@ namespace keep.Pages
     [IgnoreAntiforgeryToken]
     public class NotesModel : PageModel
     {
-        public class Note
-        {
-            public string id { get; set; }
-            public string text { get; set; }
-            public int position { get; set; }
-            public string color { get; set; }
-            //public string timestamp { get; set; }
-            public override string ToString()
-            {
-                return id
-                + " | " + position
-                + " | " + color
-                + " | " + text;
-            }
-        };
-
-        public class NoteData
-        {
-            public string timestamp { get; set; }
-            public Note[] notes { get; set; }
-        }
 
         public class PayloadIn
         {
@@ -56,6 +30,8 @@ namespace keep.Pages
             public Note[] notes { get; set; }
         }
 
+        kp_data db = new kp_data();
+
         public JsonResult OnPost([FromBody] PayloadIn request)
         {
 
@@ -63,13 +39,12 @@ namespace keep.Pages
 
             var response = new PayloadOut();
 
-            var user_data = new kp_data();
-            user_data.load_users();
+            db.load_users();
 
             //kp_util.log(request.username);
 
             // username
-            if (!user_data.user_exists(request.username))
+            if (!db.user_exists(request.username))
             {
                 response.result = "failure";
                 response.reason = "username not found";
@@ -77,7 +52,7 @@ namespace keep.Pages
             }
 
             // password
-            if (!user_data.password_correct(request.username, request.password))
+            if (!db.password_correct(request.username, request.password))
             {
                 response.result = "failure";
                 response.reason = "wrong password";
@@ -89,20 +64,15 @@ namespace keep.Pages
             response.result = "ok";
             response.reason = "";
 
-            string path = kp_config.get(kp_config.DataFolder)
-                + "/"
-                + request.username
-                + "/metadata.txt";
-
             NoteData note_data = null;
 
-            if (System.IO.File.Exists(path))
+            if (db.user_note_data_exists(request.username))
             {
                 //kp_util.log("existing file");
 
                 // read data from file
-                string json = System.IO.File.ReadAllText(path);
-                note_data = JsonConvert.DeserializeObject<NoteData>(json);
+
+                note_data = db.read_note_data(request.username);
 
                 // if client didn't change anything
                 // and if client's timestamp matches server
@@ -125,7 +95,7 @@ namespace keep.Pages
                     note_data.timestamp = request.new_timestamp; // move forward
                     note_data.notes = (Note[])request.notes.Clone();
 
-                    WriteToFile(path, note_data);
+                    Save(request.username, note_data);
 
                     // pass client data back to client
                     response.timestamp = request.new_timestamp;
@@ -151,7 +121,7 @@ namespace keep.Pages
                 note_data.timestamp = request.new_timestamp; // moving forward
                 note_data.notes = (Note[])request.notes.Clone();
 
-                WriteToFile(path, note_data);
+                Save(request.username, note_data);
 
                 response.timestamp = request.new_timestamp;
                 response.notes = request.notes;
@@ -160,52 +130,17 @@ namespace keep.Pages
             return new JsonResult(response);
         }
 
-        void WriteToFile(string path, NoteData note_data)
+        Object my_lock = new Object();
+
+        void Save(string username, NoteData note_data)
         {
-            var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
-            kp_util.log(json);
-            System.IO.File.WriteAllText(path, json);
-
-            RunCommand("git", "add .");
-            RunCommand("git", "commit -m \""
-                + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
-                + "\"");
-            RunCommand("git", "diff HEAD^ HEAD");
-        }
-
-        string RunCommand(string command, string args)
-        {
-            var process = new Process()
+            // Concurrency not important.
+            lock (my_lock)
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = command,
-                    Arguments = args,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = kp_config.get(kp_config.DataFolder),
-                }
-            };
-            process.Start();
-            string output = process.StandardOutput.ReadToEnd();
-            string error = process.StandardError.ReadToEnd();
-
-            kp_util.log("command line output: " + command + " " + args);
-            kp_util.log(output);
-            kp_util.log(error);
-
-            process.WaitForExit();
-
-            if (string.IsNullOrEmpty(error))
-            {
-                return output;
-            }
-            else
-            {
-                return error;
+                db.save_note_data(username, note_data);
             }
         }
+
     }
 }
+

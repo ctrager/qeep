@@ -2,4 +2,4 @@ keep_config_active.txt
 keep_logs/
 obj/
 bin/
-data/
+
