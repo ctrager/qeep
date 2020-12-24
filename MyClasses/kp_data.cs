@@ -30,7 +30,7 @@ namespace keep
                 int pos = line.IndexOf(":");
                 string username = line.Substring(0, pos);
                 string password = line.Substring(pos + 1);
-                Console.WriteLine(username + "," + password);
+                //Console.WriteLine(username + "," + password);
                 users_dict[username] = password;
 
                 if (!Directory.Exists("data/" + username))

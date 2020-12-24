@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Text.Json;
 using System.Diagnostics;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace keep.Pages
 {
@@ -55,14 +59,14 @@ namespace keep.Pages
         public JsonResult OnPost([FromBody] PayloadIn request)
         {
 
-            kp_util.log(JsonSerializer.Serialize(request));
+            //kp_util.log(JsonConvert.SerializeObject(request));
 
             var response = new PayloadOut();
 
             var user_data = new kp_data();
             user_data.load_users();
 
-            kp_util.log(request.username);
+            //kp_util.log(request.username);
 
             // username
             if (!user_data.user_exists(request.username))
@@ -80,7 +84,7 @@ namespace keep.Pages
                 return new JsonResult(response);
             }
 
-            kp_util.log("array len: " + request.notes.Length.ToString());
+            //kp_util.log("array len: " + request.notes.Length.ToString());
 
             response.result = "ok";
             response.reason = "";
@@ -94,17 +98,27 @@ namespace keep.Pages
 
             if (System.IO.File.Exists(path))
             {
-                kp_util.log("existing file");
+                //kp_util.log("existing file");
 
                 // read data from file
                 string json = System.IO.File.ReadAllText(path);
-                note_data = JsonSerializer.Deserialize<NoteData>(json);
+                note_data = JsonConvert.DeserializeObject<NoteData>(json);
 
-                kp_util.log("timestamp cl:" + request.server_timestamp);
-                kp_util.log("timestamp sv:" + note_data.timestamp);
-
-                if (request.server_timestamp.CompareTo(note_data.timestamp) == 0)
+                // if client didn't change anything
+                // and if client's timestamp matches server
+                // then do nothing
+                if (request.server_timestamp.CompareTo(request.new_timestamp) == 0
+                && request.server_timestamp.CompareTo(note_data.timestamp) == 0)
                 {
+                    // pass client data back to client
+                    response.timestamp = request.new_timestamp;
+                    response.notes = request.notes;
+                }
+                // client updated something, and client was working with data in sync with server
+                else if (request.server_timestamp.CompareTo(note_data.timestamp) == 0)
+                {
+                    kp_util.log(JsonConvert.SerializeObject(request));
+
                     kp_util.log("using client data");
 
                     // save client data as new server data
@@ -117,8 +131,9 @@ namespace keep.Pages
                     response.timestamp = request.new_timestamp;
                     response.notes = request.notes;
                 }
-                else
+                else // client had an out-of-date timestamp because somebody else updated data
                 {
+
                     kp_util.log("using server data, telling client to resync");
                     response.result = "resync";
                     response.timestamp = note_data.timestamp;
@@ -127,7 +142,9 @@ namespace keep.Pages
             }
             else
             {
-                kp_util.log("new file");
+                kp_util.log(JsonConvert.SerializeObject(request));
+
+                kp_util.log("file not found, creating new file");
                 // create new file
                 note_data = new NoteData();
                 // save
@@ -145,7 +162,7 @@ namespace keep.Pages
 
         void WriteToFile(string path, NoteData note_data)
         {
-            var json = JsonSerializer.Serialize(note_data);
+            var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
             kp_util.log(json);
             System.IO.File.WriteAllText(path, json);
 
@@ -153,7 +170,7 @@ namespace keep.Pages
             RunCommand("git", "commit -m \""
                 + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
                 + "\"");
-            RunCommand("git", "log -n 3");
+            RunCommand("git", "diff HEAD^ HEAD");
         }
 
         string RunCommand(string command, string args)
