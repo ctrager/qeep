@@ -44,8 +44,8 @@ namespace keep
         public const string DebugLogLevelMicrosoft = "DebugLogLevelMicrosoft";
         public const string DebugLogLevelKeep = "DebugLogLevelKeep";
         public const string UseDeveloperExceptionPage = "UseDeveloperExceptionPage";
+        public const string DataFolder = "DataFolder";
 
-   
         static Dictionary<string, dynamic> dict = new Dictionary<string, dynamic>();
 
         // This reads "keep_config.txt" and loads it into a key/value pair

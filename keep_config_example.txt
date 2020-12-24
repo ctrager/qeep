@@ -1,5 +1,8 @@
 LogFileFolder: keep_logs
 UseDeveloperExceptionPage: 1
+# with trailing slash
+DataFolder: /home/corey/github/keep_data
+
 
 # Control how much logging the app does.
 # When you say 3 for Warning, that means the log message

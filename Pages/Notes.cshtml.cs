@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System;
-using System.IO;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using Microsoft.VisualBasic;
-using System.Linq;
+using System.Diagnostics;
 
 namespace keep.Pages
 {
@@ -56,8 +52,6 @@ namespace keep.Pages
             public Note[] notes { get; set; }
         }
 
-
-
         public JsonResult OnPost([FromBody] PayloadIn request)
         {
 
@@ -91,7 +85,10 @@ namespace keep.Pages
             response.result = "ok";
             response.reason = "";
 
-            string path = "data/" + request.username + "/metadata.txt";
+            string path = kp_config.get(kp_config.DataFolder)
+                + "/"
+                + request.username
+                + "/metadata.txt";
 
             NoteData note_data = null;
 
@@ -113,8 +110,8 @@ namespace keep.Pages
                     // save client data as new server data
                     note_data.timestamp = request.new_timestamp; // move forward
                     note_data.notes = (Note[])request.notes.Clone();
-                    var client_json = JsonSerializer.Serialize(note_data);
-                    System.IO.File.WriteAllText(path, client_json);
+
+                    WriteToFile(path, note_data);
 
                     // pass client data back to client
                     response.timestamp = request.new_timestamp;
@@ -122,7 +119,7 @@ namespace keep.Pages
                 }
                 else
                 {
-                    kp_util.log("using server data");
+                    kp_util.log("using server data, telling client to resync");
                     response.result = "resync";
                     response.timestamp = note_data.timestamp;
                     response.notes = note_data.notes;
@@ -137,16 +134,61 @@ namespace keep.Pages
                 note_data.timestamp = request.new_timestamp; // moving forward
                 note_data.notes = (Note[])request.notes.Clone();
 
-                var json = JsonSerializer.Serialize(note_data);
-                kp_util.log(json);
-
-                System.IO.File.WriteAllText(path, json);
+                WriteToFile(path, note_data);
 
                 response.timestamp = request.new_timestamp;
                 response.notes = request.notes;
             }
 
             return new JsonResult(response);
+        }
+
+        void WriteToFile(string path, NoteData note_data)
+        {
+            var json = JsonSerializer.Serialize(note_data);
+            kp_util.log(json);
+            System.IO.File.WriteAllText(path, json);
+
+            RunCommand("git", "add .");
+            RunCommand("git", "commit -m \""
+                + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
+                + "\"");
+            RunCommand("git", "log -n 3");
+        }
+
+        string RunCommand(string command, string args)
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = kp_config.get(kp_config.DataFolder),
+                }
+            };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+
+            kp_util.log("command line output: " + command + " " + args);
+            kp_util.log(output);
+            kp_util.log(error);
+
+            process.WaitForExit();
+
+            if (string.IsNullOrEmpty(error))
+            {
+                return output;
+            }
+            else
+            {
+                return error;
+            }
         }
     }
 }
