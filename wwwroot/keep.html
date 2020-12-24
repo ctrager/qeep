@@ -42,7 +42,7 @@
         border-top-right-radius: 6px;
         overflow: auto;
 
-
+        /* change here and below in logic - search for "shrink" */
         min-width: 160px;
         min-height: 80px;
     }
@@ -80,9 +80,9 @@
         padding: 3px;
 
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        xtop: 50%;
+        xleft: 50%;
+        xtransform: translate(-50%, -50%);
         z-index: 99px;
     }
 
@@ -175,6 +175,7 @@
 
         load_notes()
 
+        // hook up listeners
         get("new_button").addEventListener("click", create_new_note)
         get("export_button").addEventListener("click", export_text)
         get("save_button").addEventListener("click", save_notes)
@@ -325,16 +326,15 @@
         return document.getElementById(id)
     }
 
+    // save each note as a text file
     function export_text() {
         var note_elements = document.getElementsByClassName("note")
         for (i = 0; i < note_elements.length; i++) {
             var note_el = note_elements[i]
             var textarea = note_el.getElementsByClassName("note_textarea")[0]
-            //var text = textarea.innerText
             var text = textarea.value
             console.log(note_el.id, text)
             create_and_click_on_download_link("keep_" + note_el.id + ".txt", text)
-
         }
     }
 
@@ -356,6 +356,7 @@
         })
     }
 
+    // create the note dom elements
     function build_note(note_object) {
         var template = get("note_template")
         var note_el = template.cloneNode(true)
@@ -393,19 +394,21 @@
 
     function textarea_on_click(event) {
 
+        // resize/shrink all the notes except the one we are editing
+
         var textarea_array = document.getElementsByClassName("note_textarea")
-        console.log("array len", textarea_array.length)
         for (i = 0; i < textarea_array.length; i++) {
 
             var textarea = textarea_array[i]
 
+            // skip the one we are editing
             if (textarea.parentNode.id == event.target.parentNode.id) {
 
                 continue;
             }
-            console.log(textarea.style.width)
-            textarea.style.width = "200px"
-            textarea.style.height = "100px"
+
+            textarea.style.width = "160px"
+            textarea.style.height = "180px"
         }
 
         resize_textarea(event.target)
@@ -414,7 +417,7 @@
 
     function resize_textarea(textarea) {
 
-        //console.log(textarea.scrollWidth, textarea.scrollHeight)
+        // resize to get rid of scrollbars
 
         textarea.style.width = 0
         textarea.style.width = textarea.scrollWidth + "px"
@@ -425,14 +428,15 @@
         on_change()
     }
 
+
     var timer1 = null
     var timer2 = null
 
     function on_change() {
 
+        // timer2 is related to checking server periodically
         clearTimeout(timer2)
 
-        //console.log("handle_text_change")
         if (timer1 != null) {
             clearTimeout(timer1)
         }
@@ -452,17 +456,8 @@
         })
     }
 
-    function show_position_popup(event) {
-        close_all()
-        console.log("show_position_popup")
-        var popup = get("position_popup")
-        var note_el = event.target.parentNode.parentNode
-        popup.dataset.note_id = note_el.id
-        get("position_input").value = note_el.style.order
-        popup.style.display = "block"
-    }
-
     function show_delete_confirmation() {
+        close_all()
         var confirmation = confirm("Are you sure you want to delete?")
 
         if (!confirmation) {
@@ -471,12 +466,27 @@
 
         var note_el = event.target.parentNode.parentNode
         note_el.remove()
+
+        // save
         on_change()
+    }
+
+
+    function show_position_popup(event) {
+        close_all()
+        var popup = get("position_popup")
+        var note_el = event.target.parentNode.parentNode
+        popup.dataset.note_id = note_el.id
+        get("position_input").value = note_el.style.order
+
+        popup.style.top = (20 + note_el.offsetTop) + "px"
+        popup.style.left = (20 + note_el.offsetLeft) + "px"
+        popup.style.display = "block"
     }
 
     function show_color_popup(event) {
         close_all()
-        console.log("show_colorpopup")
+
         var popup = get("color_popup")
         var note_el = event.target.parentNode.parentNode
         popup.dataset.note_id = note_el.id
@@ -484,6 +494,9 @@
         var textarea = note_el.getElementsByClassName("note_textarea")[0]
         color_select.value = textarea.style.backgroundColor
         color_select.style.backgroundColor = textarea.style.backgroundColor
+
+        popup.style.top = (20 + note_el.offsetTop) + "px"
+        popup.style.left = (20 + note_el.offsetLeft) + "px"
         popup.style.display = "block"
     }
 
@@ -504,26 +517,40 @@
 
     function change_position(event) {
         console.log("change_position", event.target.value)
-        // get data from pop
+
+        // what position was entered
         var position = event.target.value
+
+        // which note?
         var id = event.target.parentNode.dataset.note_id
-        var node_el = get(id)
-        node_el.style.order = position
+        var note_el = get(id)
+
+        // change flex order, aka "position"
+        note_el.style.order = position
+
+        // save
         on_change()
     }
 
     function change_color(event) {
         console.log("change_color")
-        // get data from pop
+
+        // get select element
         var color_select = event.target
 
+        // what color was selected
         var color = color_select.options[color_select.selectedIndex].value
+
+        // which note?
         var id = event.target.parentNode.dataset.note_id
         var note_el = get(id)
-        var textarea = note_el.getElementsByClassName("note_textarea")[0]
 
+        // change color
+        var textarea = note_el.getElementsByClassName("note_textarea")[0]
         textarea.style.backgroundColor = color
         color_select.style.backgroundColor = color
+
+        // save
         on_change()
     }
 
