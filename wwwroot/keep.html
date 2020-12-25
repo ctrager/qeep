@@ -98,23 +98,44 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
+
+    #status {
+        color: green;
+        font-style: italic;
+    }
+
+    #config_form {
+        display: inline-block;
+        border: 1px solid gray;
+        border-radius: 6px;
+        background-color: #eeffee;
+        padding: 3px;
+        z-index: 99;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 99px;
+    }
+
+    .info {
+        color: green;
+        font-style: italic;
+    }
 </style>
 
 <head>
 </head>
 
 <body>
-    <div>Configure font, configure timing, echo user, show saving, show on/off line</div>
-
     <div>
         <span id="new_button" class="fake_link">New Note</span>
         &nbsp;&nbsp;&nbsp;
         <span id="export_button" class="fake_link">Export</span>
+        &nbsp;&nbsp;&nbsp;
+        <span id="configure_button" class="fake_link">Configure</span>
     </div>
-    <div>
-        <button id="save_button">Save</button>
-        <button id="load_button">Load</button>
-    </div>
+    <div><span id="status"></span></div>
 
     <div id="notes_container"></div>
 
@@ -143,7 +164,6 @@
 
     <div id="note_template" class="note_template" style="display:none">
 
-        <!--<div class="note_textarea" contentEditable></div>-->
         <textarea class="note_textarea"></textarea>
 
         <div class="note_footer">
@@ -154,40 +174,135 @@
         </div>
     </div>
 
+    <div id="config_form" style="display:none">
+
+        <table>
+            <tr>
+                <td>Username
+                <td><input id="username" />
+            </tr>
+            <tr>
+                <td>Password
+                <td><input id="password" type="password" />
+            </tr>
+            <tr>
+                <td colspan="2"><span class="info">Password will be saved as plain text</span>
+            </tr>
+
+            <tr>
+                <td>URL
+                <td><input id="url" value="" />
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="close_config_button">Close</button>
+                    <button id="save_config_button">Save</button>
+                    <button id="clear_config_button">Clear</button>
+            </tr>
+        </table>
+
+    </div>
+
 </body>
 <script>
 
-    var online = false
-    var url = "http://10.0.0.2:5000/Notes"
-    var username = "corey"
-    var password = "password"
-    var local_note_data
-    const NOTE_DATA = "note_data"
+    var config = {
+        username: "",
+        password: "",
+        url: ""
+    }
+
+    //var url = "http://10.0.0.2:5000/Notes"
+
     var seconds_before_save = 3
     var seconds_before_poll = 12
-    var data_source = ""
 
+    var online = false
+    var data_source = ""
+    var local_note_data
+    const NOTE_DATA = "note_data"
 
     document.addEventListener("DOMContentLoaded", function (event) {
 
-        load_notes()
+        load_config()
+
+        if (config.username == ""
+            || config.password == ""
+            || config.url == "") {
+            show_config_form()
+        }
+        else {
+            load_notes()
+        }
 
         // hook up listeners
         get("new_button").addEventListener("click", create_new_note)
         get("export_button").addEventListener("click", export_text)
-        get("save_button").addEventListener("click", save_notes)
-        get("load_button").addEventListener("click", load_notes)
+        get("configure_button").addEventListener("click", show_config_form)
+        get("close_config_button").addEventListener("click", close_config_form)
+        get("save_config_button").addEventListener("click", save_config)
+        get("clear_config_button").addEventListener("click", clear_config)
 
         get("position_input").addEventListener("change", change_position)
         get("position_close").addEventListener("click", close_position_popup)
         get("color_select").addEventListener("change", change_color)
         get("color_close").addEventListener("click", close_color_popup)
 
-    });
+    })
+
+    function show_config_form() {
+        get("config_form").style.display = "block"
+    }
+
+    function close_config_form() {
+
+        if (config.username == ""
+            || config.password == ""
+            || config.url == "") {
+            alert("App won't run without config")
+
+        }
+        else {
+            get("config_form").style.display = "none"
+            // start!
+            load_notes()
+        }
+
+    }
+
+    function load_config() {
+        var c = JSON.parse(window.localStorage.getItem("config"))
+        if (c != null) {
+            config = c
+
+            get("username").value = config.username
+            password: get("password").value = config.password
+            get("url").value = config.url
+        }
+    }
+
+    function save_config() {
+        config = {
+            username: get("username").value,
+            password: get("password").value,
+            url: get("url").value
+        }
+
+        window.localStorage.setItem("config", JSON.stringify(config))
+    }
+
+    function clear_config() {
+        get("username").value = ""
+        password: get("password").value = ""
+        get("url").value = ""
+        save_config()
+    }
 
     // post to server so that it can decide whether our data is the 
     // latest greatest or its data
     function load_notes() {
+        set_status("Loading")
+        get("notes_container").innerHTML = ""
 
         local_note_data = JSON.parse(window.localStorage.getItem(NOTE_DATA))
         console.log("load_notes", local_note_data)
@@ -205,10 +320,15 @@
 
     }
 
+    function set_status(status) {
+        get("status").innerText = status
+    }
+
     function post_to_server(first_time) {
+        set_status("Posting to server")
         var request_payload = {
-            username: username,
-            password: password,
+            username: config.username,
+            password: config.password,
             server_timestamp: local_note_data.server_timestamp,
             new_timestamp: local_note_data.new_timestamp,
             notes: local_note_data.notes
@@ -230,6 +350,7 @@
                     }
                     else {
                         // ok or resync
+                        set_status("Handling response from server")
 
                         // sync ourselves to server
                         local_note_data.server_timestamp = response_payload.timestamp
@@ -238,6 +359,7 @@
                         window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
 
                         if (response_payload.result == "resync") {
+                            set_status("Resyncing with server")
                             console.log("using server data instead of our data")
 
                             if (!first_time) {
@@ -251,8 +373,10 @@
                             }
                         }
                     }
+                    set_status("In sync with server")
                 }
                 else {
+                    set_status("No response from server. Offline.")
                     data_source = "local"
                 }
                 console.log("data_source", data_source)
@@ -271,11 +395,12 @@
             }
         };
 
-        request.open("POST", url, true);
+        request.open("POST", config.url, true);
         request.setRequestHeader("Content-type", "application/json");
 
         var json = JSON.stringify(request_payload)
         console.log("posting", json)
+
         request.send(JSON.stringify(request_payload));
 
     }
@@ -295,6 +420,7 @@
     function save_notes() {
 
         console.log("save notes")
+        set_status("Saving data locally")
 
         var note_elements = document.getElementsByClassName("note")
 
@@ -325,6 +451,11 @@
 
     // save each note as a text file
     function export_text() {
+
+        if (!confirm("This will save a file for each note in your Downloads folder.\n\nAre you sure you want to continue?")) {
+            return;
+        }
+
         var note_elements = document.getElementsByClassName("note")
         for (i = 0; i < note_elements.length; i++) {
             var note_el = note_elements[i]
@@ -387,6 +518,8 @@
 
     function textarea_on_input(event) {
         resize_textarea(event.target)
+        set_status("Text changed")
+        on_change()
     }
 
     function textarea_on_click(event) {
@@ -422,7 +555,6 @@
         textarea.style.height = 0
         textarea.style.height = textarea.scrollHeight + "px"
 
-        on_change()
     }
 
 
@@ -439,7 +571,11 @@
         }
 
         // Save when the user is idle for N seconds
-        timer1 = setTimeout(save_notes, 1000 * seconds_before_save)
+        timer1 = setTimeout(
+            function () {
+                set_status("Saving data to server")
+                save_notes()
+            }, 1000 * seconds_before_save)
 
     }
 
@@ -452,6 +588,7 @@
             color: "white"
         })
     }
+
 
     function show_delete_confirmation() {
         close_all()
@@ -467,7 +604,6 @@
         // save
         on_change()
     }
-
 
     function show_position_popup(event) {
         close_all()
