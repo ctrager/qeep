@@ -87,17 +87,35 @@ namespace qeep
 
             lock (my_lock)
             {
-                foreach (Note note in note_data.notes)
+                string dir = data_folder + "/" + username;
+                string[] files = System.IO.Directory.GetFiles(dir, "note*");
+                var file_dict = new Dictionary<string, bool>();
+                foreach (string file in files)
                 {
-                    string note_path = data_folder + "/" + username + "/note_" + note.id;
-                    System.IO.File.WriteAllText(note_path, note.text);
+                    // qp_util.log(file);
+                    file_dict[file] = false; // false means delete, don't keep
                 }
 
-                string path = data_folder + "/" + username + "/metadata.txt";
+                string path = dir + "/metadata.txt";
 
                 var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
                 qp_util.log(json);
                 System.IO.File.WriteAllText(path, json);
+
+                foreach (Note note in note_data.notes)
+                {
+                    string note_path = dir + "/note_" + note.id;
+                    System.IO.File.WriteAllText(note_path, note.text);
+                    file_dict[note_path] = true; // keep
+                }
+
+                foreach (string file in file_dict.Keys)
+                {
+                    if (!file_dict[file])
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                }
 
                 // also commit change to git, so that we have history, data recovery
                 qp_util.run_command("git", "add .");
