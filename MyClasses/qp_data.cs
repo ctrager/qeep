@@ -24,9 +24,10 @@ namespace qeep
 
             var lines = File.ReadLines(data_folder + "/users.txt");
 
-            foreach (string line in lines)
+            foreach (string s in lines)
             {
-                if (line.StartsWith("#"))
+                string line = s.Trim();
+                if (line.StartsWith("#") || string.IsNullOrEmpty(line))
                 {
                     continue;
                 }
