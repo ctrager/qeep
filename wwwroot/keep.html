@@ -313,9 +313,10 @@
                 new_timestamp: "1999",
                 notes: []
             }
+            window.localStorage.setItem(JSON.stringify(NOTE_DATA, local_note_data))
         }
 
-        // server will give us the note data to render
+        build_notes_from_object_array(local_note_data.notes)
         post_to_server(true) // first time
 
     }
@@ -324,7 +325,7 @@
         get("status").innerText = status
     }
 
-    function post_to_server(first_time) {
+    function post_to_server() {
         set_status("Posting to server")
         var request_payload = {
             username: config.username,
@@ -338,62 +339,57 @@
 
         // DONE == 4
         request.onreadystatechange = function () {
-            console.log("onreadystatechange state, status", request.readyState, request.status)
             if (request.readyState == XMLHttpRequest.DONE) {
+                console.log("onreadystatechange status", request.status)
 
                 if (request.status == 200) {
                     data_source = "server"
                     var response_payload = JSON.parse(request.responseText)
-                    console.log(response_payload)
+                    console.log("incoming payload", response_payload)
+
                     if (response_payload.result == "failure") {
                         alert(response_payload.reason)
                     }
+                    else if (response_payload.result == "ok" && response_payload.reason == "no change") {
+                        // do nothing
+                        // console.log("doing nothing")
+                    }
                     else {
-                        // ok or resync
-                        set_status("Handling response from server")
-
-                        // sync ourselves to server
+                        console.log("ok or resync")
+                        // result = ok or resync
+                        // Sync ourselves to server
                         local_note_data.server_timestamp = response_payload.timestamp
                         local_note_data.new_timestamp = response_payload.timestamp
                         local_note_data.notes = response_payload.notes
                         window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
 
                         if (response_payload.result == "resync") {
+                            // this should only happen if another client
+                            // updated data while we held a stale timestamp
                             set_status("Resyncing with server")
                             console.log("using server data instead of our data")
 
-                            if (!first_time) {
-
-                                console.log("resyncing stale local data with server")
-
-                                // some other client updated server, so we were
-                                // working with stale data. Resync with server
-                                get("notes_container").innerHTML = ""
-                                build_notes_from_object_array(local_note_data.notes)
-                            }
+                            get("notes_container").innerHTML = ""
+                            build_notes_from_object_array(local_note_data.notes)
                         }
                     }
                     set_status("In sync with server")
-                }
+                } // end http status 200
                 else {
                     set_status("No response from server. Offline.")
                     data_source = "local"
                 }
+
                 console.log("data_source", data_source)
 
-                if (first_time) {
-                    // this might be data from the server, or this
-                    // might be data from local storage
-                    window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
-                    build_notes_from_object_array(local_note_data.notes)
-                }
-
+                // check server in case OTHER clients have updated data
                 if (timer2 != null) {
                     clearTimeout(timer2)
                 }
-                timer2 = setTimeout(function () {post_to_server(false)}, 1000 * seconds_before_poll)
-            }
-        };
+                timer2 = setTimeout(function () {post_to_server()}, 1000 * seconds_before_poll)
+
+            } // done
+        } // state change
 
         request.open("POST", config.url, true);
         request.setRequestHeader("Content-type", "application/json");
@@ -442,7 +438,7 @@
         local_note_data.new_timestamp = get_now_as_string()
         window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
 
-        post_to_server(false, get_now_as_string()) // NOT first time
+        post_to_server()
     }
 
     function get(id) {

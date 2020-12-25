@@ -1,11 +1,6 @@
 using System;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.Data;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-using System.Linq;
-using Microsoft.AspNetCore.Http.Extensions;
+using System.Diagnostics;
 
 public class bd { }; // for logging context
 
@@ -90,6 +85,41 @@ namespace keep
                     return false;
 
             return true;
+        }
+
+        public static string run_command(string command, string args)
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = kp_config.get(kp_config.DataFolder),
+                }
+            };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+
+            kp_util.log("command line output: " + command + " " + args);
+            kp_util.log(output);
+            kp_util.log(error);
+
+            process.WaitForExit();
+
+            if (string.IsNullOrEmpty(error))
+            {
+                return output;
+            }
+            else
+            {
+                return error;
+            }
         }
 
     } // end class

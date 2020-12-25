@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace keep
 {
@@ -15,7 +14,9 @@ namespace keep
 
     public class kp_data
     {
-        public Dictionary<string, string> users_dict = new Dictionary<string, string>();
+        Dictionary<string, string> users_dict = new Dictionary<string, string>();
+
+        Object my_lock = new object();
 
         public void load_users()
         {
@@ -54,19 +55,26 @@ namespace keep
 
         public bool user_note_data_exists(string username)
         {
-            string data_folder = kp_config.get(kp_config.DataFolder);
 
+            string data_folder = kp_config.get(kp_config.DataFolder);
             string path = data_folder + "/" + username + "/metadata.txt";
 
-            return System.IO.File.Exists(path);
+            lock (my_lock)
+            {
+                return System.IO.File.Exists(path);
+            }
         }
 
         public NoteData read_note_data(string username)
         {
             string data_folder = kp_config.get(kp_config.DataFolder);
             string path = data_folder + "/" + username + "/metadata.txt";
-            string json = System.IO.File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<NoteData>(json);
+
+            lock (my_lock)
+            {
+                string json = System.IO.File.ReadAllText(path);
+                return JsonConvert.DeserializeObject<NoteData>(json);
+            }
 
         }
 
@@ -74,59 +82,28 @@ namespace keep
         {
             string data_folder = kp_config.get(kp_config.DataFolder);
 
-            foreach (Note note in note_data.notes)
+            lock (my_lock)
             {
-                string note_path = data_folder + "/" + username + "/note_" + note.id;
-                System.IO.File.WriteAllText(note_path, note.text);
-            }
-
-            string path = data_folder + "/" + username + "/metadata.txt";
-
-            var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
-            kp_util.log(json);
-            System.IO.File.WriteAllText(path, json);
-
-            run_command("git", "add .");
-            run_command("git", "commit -m \""
-                + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
-                + "\"");
-            run_command("git", "diff HEAD^ HEAD");
-        }
-
-        string run_command(string command, string args)
-        {
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
+                foreach (Note note in note_data.notes)
                 {
-                    FileName = command,
-                    Arguments = args,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = kp_config.get(kp_config.DataFolder),
+                    string note_path = data_folder + "/" + username + "/note_" + note.id;
+                    System.IO.File.WriteAllText(note_path, note.text);
                 }
-            };
-            process.Start();
-            string output = process.StandardOutput.ReadToEnd();
-            string error = process.StandardError.ReadToEnd();
 
-            kp_util.log("command line output: " + command + " " + args);
-            kp_util.log(output);
-            kp_util.log(error);
+                string path = data_folder + "/" + username + "/metadata.txt";
 
-            process.WaitForExit();
+                var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
+                kp_util.log(json);
+                System.IO.File.WriteAllText(path, json);
 
-            if (string.IsNullOrEmpty(error))
-            {
-                return output;
-            }
-            else
-            {
-                return error;
+                kp_util.run_command("git", "add .");
+                kp_util.run_command("git", "commit -m \""
+                    + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
+                    + "\"");
+                kp_util.run_command("git", "diff HEAD^ HEAD");
             }
         }
+
 
     } // end class
 }

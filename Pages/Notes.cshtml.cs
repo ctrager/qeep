@@ -7,7 +7,7 @@ namespace keep.Pages
 {
 
     /*
-    This "IgnoreAntiforgeryToken" allows the screenshot app to post
+    This "IgnoreAntiforgeryToken" allows the client app to post
     */
     [IgnoreAntiforgeryToken]
     public class NotesModel : PageModel
@@ -42,7 +42,6 @@ namespace keep.Pages
             db.load_users();
 
             //kp_util.log(request.username);
-
             // username
             if (!db.user_exists(request.username))
             {
@@ -58,11 +57,6 @@ namespace keep.Pages
                 response.reason = "wrong password";
                 return new JsonResult(response);
             }
-
-            //kp_util.log("array len: " + request.notes.Length.ToString());
-
-            response.result = "ok";
-            response.reason = "";
 
             NoteData note_data = null;
 
@@ -80,32 +74,39 @@ namespace keep.Pages
                 if (request.server_timestamp.CompareTo(request.new_timestamp) == 0
                 && request.server_timestamp.CompareTo(note_data.timestamp) == 0)
                 {
-                    // pass client data back to client
-                    response.timestamp = request.new_timestamp;
-                    response.notes = request.notes;
+                    response.result = "ok";
+                    response.reason = "no change";
+                    // because client is going to ignore this part of response,
+                    // don't bother using the bandwidth
+                    response.timestamp = "";
+                    response.notes = null;
                 }
-                // client updated something, and client was working with data in sync with server
                 else if (request.server_timestamp.CompareTo(note_data.timestamp) == 0)
                 {
                     kp_util.log(JsonConvert.SerializeObject(request));
+                    kp_util.log("a normal save using client data");
 
-                    kp_util.log("using client data");
+                    response.result = "ok";
+                    response.reason = "normal save";
 
                     // save client data as new server data
                     note_data.timestamp = request.new_timestamp; // move forward
                     note_data.notes = (Note[])request.notes.Clone();
+                    db.save_note_data(request.username, note_data);
 
-                    Save(request.username, note_data);
-
-                    // pass client data back to client
+                    // Pass client data back to client
                     response.timestamp = request.new_timestamp;
                     response.notes = request.notes;
                 }
                 else // client had an out-of-date timestamp because somebody else updated data
                 {
-
+                    kp_util.log(JsonConvert.SerializeObject(request));
                     kp_util.log("using server data, telling client to resync");
+
                     response.result = "resync";
+                    response.reason = "stale client timestamp";
+
+                    // return server data
                     response.timestamp = note_data.timestamp;
                     response.notes = note_data.notes;
                 }
@@ -113,15 +114,16 @@ namespace keep.Pages
             else
             {
                 kp_util.log(JsonConvert.SerializeObject(request));
+                kp_util.log("file not found, creating new file using client data");
 
-                kp_util.log("file not found, creating new file");
-                // create new file
+                response.result = "ok";
+                response.reason = "new file";
+
+                // create new file and save
                 note_data = new NoteData();
-                // save
                 note_data.timestamp = request.new_timestamp; // moving forward
                 note_data.notes = (Note[])request.notes.Clone();
-
-                Save(request.username, note_data);
+                db.save_note_data(request.username, note_data);
 
                 response.timestamp = request.new_timestamp;
                 response.notes = request.notes;
@@ -129,18 +131,6 @@ namespace keep.Pages
 
             return new JsonResult(response);
         }
-
-        Object my_lock = new Object();
-
-        void Save(string username, NoteData note_data)
-        {
-            // Concurrency not important.
-            lock (my_lock)
-            {
-                db.save_note_data(username, note_data);
-            }
-        }
-
     }
 }
 
