@@ -313,7 +313,7 @@
                 new_timestamp: "1999",
                 notes: []
             }
-            window.localStorage.setItem(JSON.stringify(NOTE_DATA, local_note_data))
+            window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
         }
 
         build_notes_from_object_array(local_note_data.notes)

@@ -88,8 +88,8 @@ namespace qeep
 
             lock (my_lock)
             {
-                string dir = data_folder + "/" + username;
-                string[] files = System.IO.Directory.GetFiles(dir, "note*");
+                string user_dir = data_folder + "/" + username;
+                string[] files = System.IO.Directory.GetFiles(user_dir, "note*");
                 var file_dict = new Dictionary<string, bool>();
                 foreach (string file in files)
                 {
@@ -97,7 +97,7 @@ namespace qeep
                     file_dict[file] = false; // false means delete, don't keep
                 }
 
-                string path = dir + "/metadata.txt";
+                string path = user_dir + "/metadata.txt";
 
                 var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
                 qp_util.log(json);
@@ -105,7 +105,7 @@ namespace qeep
 
                 foreach (Note note in note_data.notes)
                 {
-                    string note_path = dir + "/note_" + note.id;
+                    string note_path = user_dir + "/note_" + note.id;
                     System.IO.File.WriteAllText(note_path, note.text);
                     file_dict[note_path] = true; // keep
                 }
