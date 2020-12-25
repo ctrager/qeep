@@ -1,4 +1,4 @@
-namespace keep
+namespace qeep
 {
     public class Note
     {

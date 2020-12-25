@@ -1,7 +1,7 @@
-LogFileFolder: keep_logs
+LogFileFolder: qeep_logs
 UseDeveloperExceptionPage: 1
-# with trailing slash
-DataFolder: /home/corey/github/keep_data
+# without trailing slash
+DataFolder: /home/corey/github/qeep_data
 
 
 # Control how much logging the app does.
@@ -17,4 +17,4 @@ DataFolder: /home/corey/github/keep_data
 
 # Microsoft can be very verbose
 DebugLogLevelMicrosoft: 4
-DebugLogLevelKeep: 2
+DebugLogLevelQeep: 2

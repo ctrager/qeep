@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 public class bd { }; // for logging context
 
-namespace keep
+namespace qeep
 {
 
     /* 
@@ -15,7 +15,7 @@ namespace keep
     */
 
 
-    public static class kp_util
+    public static class qp_util
     {
 
         static Serilog.ILogger _logger = null;
@@ -90,16 +90,16 @@ namespace keep
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    WorkingDirectory = kp_config.get(kp_config.DataFolder),
+                    WorkingDirectory = qp_config.get(qp_config.DataFolder),
                 }
             };
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
             string error = process.StandardError.ReadToEnd();
 
-            kp_util.log("command line output: " + command + " " + args);
-            kp_util.log(output);
-            kp_util.log(error);
+            qp_util.log("command line output: " + command + " " + args);
+            qp_util.log(output);
+            qp_util.log(error);
 
             process.WaitForExit();
 

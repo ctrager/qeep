@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Serilog;
 using Microsoft.AspNetCore.HttpOverrides;
 
-namespace keep
+namespace qeep
 {
     public class Startup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            kp_util.log("Startup");
+            qp_util.log("Startup");
             Configuration = configuration;
 
         }
@@ -24,7 +24,7 @@ namespace keep
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            kp_util.log("ConfigureServices");
+            qp_util.log("ConfigureServices");
 
             // services.AddDistributedMemoryCache();
 
@@ -33,7 +33,7 @@ namespace keep
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 // options.CheckConsentNeeded = context => false; // Default is true, make it false
                 //options.CheckConsentNeeded = false;
-                // So that if we click a keep link in email, it works
+                // So that if we click a qeep link in email, it works
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -80,7 +80,7 @@ namespace keep
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            kp_util.log("Configure");
+            qp_util.log("Configure");
 
             app.UseCors("CoreyPolicy");
 
@@ -93,7 +93,7 @@ namespace keep
 
             //if (env.IsDevelopment())
             //{
-            if (kp_config.get(kp_config.UseDeveloperExceptionPage) == 1)
+            if (qp_config.get(qp_config.UseDeveloperExceptionPage) == 1)
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -121,7 +121,7 @@ namespace keep
             app.Use(async (context, next) =>
             {
 
-                //kp_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
+                //qp_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
                 await next.Invoke();
 
             });

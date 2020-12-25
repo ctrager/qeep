@@ -1,5 +1,5 @@
-keep_config_active.txt
-keep_logs/
+qeep_config_active.txt
+qeep_logs/
 obj/
 bin/
 

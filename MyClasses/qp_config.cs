@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
-namespace keep
+namespace qeep
 {
     /*
 
     
-    keep doesn't use a standard ASPNET appsettings.json file.
+    qeep doesn't use a standard ASPNET appsettings.json file.
     Instead, it uses a linux style config file.
 
     The following is a rant about why I'm not using the appsettings.json file.
@@ -38,17 +38,17 @@ namespace keep
     */
 
 
-    public static class kp_config
+    public static class qp_config
     {
         public const string LogFileFolder = "LogFileFolder";
         public const string DebugLogLevelMicrosoft = "DebugLogLevelMicrosoft";
-        public const string DebugLogLevelKeep = "DebugLogLevelKeep";
+        public const string DebugLogLevelQeep = "DebugLogLevelQeep";
         public const string UseDeveloperExceptionPage = "UseDeveloperExceptionPage";
         public const string DataFolder = "DataFolder";
 
         static Dictionary<string, dynamic> dict = new Dictionary<string, dynamic>();
 
-        // This reads "keep_config.txt" and loads it into a key/value pair
+        // This reads "qeep_config.txt" and loads it into a key/value pair
         // collection.
         // Valid lines are either:
         // key:value
@@ -73,7 +73,7 @@ namespace keep
             {
                 DateTime time1 = DateTime.Now;
 
-                var lines = File.ReadLines("keep_config_active.txt");
+                var lines = File.ReadLines("qeep_config_active.txt");
 
                 int line_count = 0;
 
@@ -123,17 +123,17 @@ namespace keep
                 } // end for each line
                 DateTime time2 = DateTime.Now;
                 TimeSpan timespan = time2 - time1;
-                kp_util.log("bd_config.load_config() milliseconds: " + timespan.TotalMilliseconds.ToString());
+                qp_util.log("bd_config.load_config() milliseconds: " + timespan.TotalMilliseconds.ToString());
 
             } // end lock
         }
 
         public static void log_config()
         {
-            kp_util.log("config:");
+            qp_util.log("config:");
             foreach (var k in dict.Keys)
             {
-                kp_util.log(k + "=" + dict[k].ToString());
+                qp_util.log(k + "=" + dict[k].ToString());
             }
         }
 

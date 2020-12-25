@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace keep
+namespace qeep
 {
 
     public class User
@@ -12,7 +12,7 @@ namespace keep
         public string password { get; set; }
     }
 
-    public class kp_data
+    public class qp_data
     {
         Dictionary<string, string> users_dict = new Dictionary<string, string>();
 
@@ -20,7 +20,7 @@ namespace keep
 
         public void load_users()
         {
-            string data_folder = kp_config.get(kp_config.DataFolder);
+            string data_folder = qp_config.get(qp_config.DataFolder);
 
             var lines = File.ReadLines(data_folder + "/users.txt");
 
@@ -56,7 +56,7 @@ namespace keep
         public bool user_note_data_exists(string username)
         {
 
-            string data_folder = kp_config.get(kp_config.DataFolder);
+            string data_folder = qp_config.get(qp_config.DataFolder);
             string path = data_folder + "/" + username + "/metadata.txt";
 
             lock (my_lock)
@@ -67,7 +67,7 @@ namespace keep
 
         public NoteData read_note_data(string username)
         {
-            string data_folder = kp_config.get(kp_config.DataFolder);
+            string data_folder = qp_config.get(qp_config.DataFolder);
             string path = data_folder + "/" + username + "/metadata.txt";
 
             lock (my_lock)
@@ -80,7 +80,7 @@ namespace keep
 
         public void save_note_data(string username, NoteData note_data)
         {
-            string data_folder = kp_config.get(kp_config.DataFolder);
+            string data_folder = qp_config.get(qp_config.DataFolder);
 
             // It would be bad if multiple threads were writing to the 
             // file system at the same time. 
@@ -96,15 +96,15 @@ namespace keep
                 string path = data_folder + "/" + username + "/metadata.txt";
 
                 var json = JsonConvert.SerializeObject(note_data, Formatting.Indented);
-                kp_util.log(json);
+                qp_util.log(json);
                 System.IO.File.WriteAllText(path, json);
 
                 // also commit change to git, so that we have history, data recovery
-                kp_util.run_command("git", "add .");
-                kp_util.run_command("git", "commit -m \""
+                qp_util.run_command("git", "add .");
+                qp_util.run_command("git", "commit -m \""
                     + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
                     + "\"");
-                kp_util.run_command("git", "diff HEAD^ HEAD");
+                qp_util.run_command("git", "diff HEAD^ HEAD");
             }
         }
 

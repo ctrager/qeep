@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
-namespace keep
+namespace qeep
 {
     public class Program
     {
@@ -19,18 +19,18 @@ namespace keep
             Console.WriteLine("Main"); // here on purpose
 
             // We have to load_config first to get Serilog's folder
-            kp_config.load_config();
+            qp_config.load_config();
 
-            string log_file_location = kp_config.get(kp_config.LogFileFolder) + "/keep_log_.txt";
+            string log_file_location = qp_config.get(qp_config.LogFileFolder) + "/qeep_log_.txt";
 
-            LogEventLevel microsoft_level = (LogEventLevel)kp_config.get(kp_config.DebugLogLevelMicrosoft);
-            LogEventLevel keep_level = (LogEventLevel)kp_config.get(kp_config.DebugLogLevelKeep);
+            LogEventLevel microsoft_level = (LogEventLevel)qp_config.get(qp_config.DebugLogLevelMicrosoft);
+            LogEventLevel qeep_level = (LogEventLevel)qp_config.get(qp_config.DebugLogLevelQeep);
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
 
                 .MinimumLevel.Override("Microsoft", microsoft_level)
-                .MinimumLevel.Override("bd", keep_level)
+                .MinimumLevel.Override("bd", qeep_level)
 
                 .Enrich.FromLogContext()
                 .WriteTo.Console(outputTemplate:
@@ -42,11 +42,11 @@ namespace keep
                 .CreateLogger();
 
             // We have to do this after the Serilog setup.
-            kp_util.init_serilog_context();
+            qp_util.init_serilog_context();
 
-            // Write config to log, even though keep can pick up most changes without
+            // Write config to log, even though qeep can pick up most changes without
             // being restarted and we don't log the changed values.
-            kp_config.log_config();
+            qp_config.log_config();
 
             try
             {

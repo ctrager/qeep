@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Newtonsoft.Json;
 
-namespace keep.Pages
+namespace qeep.Pages
 {
 
     /*
@@ -30,18 +30,18 @@ namespace keep.Pages
             public Note[] notes { get; set; }
         }
 
-        kp_data db = new kp_data();
+        qp_data db = new qp_data();
 
         public JsonResult OnPost([FromBody] PayloadIn request)
         {
 
-            //kp_util.log(JsonConvert.SerializeObject(request));
+            //qp_util.log(JsonConvert.SerializeObject(request));
 
             var response = new PayloadOut();
 
             db.load_users();
 
-            //kp_util.log(request.username);
+            //qp_util.log(request.username);
             // username
             if (!db.user_exists(request.username))
             {
@@ -62,7 +62,7 @@ namespace keep.Pages
 
             if (db.user_note_data_exists(request.username))
             {
-                //kp_util.log("existing file");
+                //qp_util.log("existing file");
 
                 // read data from file
 
@@ -83,8 +83,8 @@ namespace keep.Pages
                 }
                 else if (request.server_timestamp.CompareTo(note_data.timestamp) == 0)
                 {
-                    kp_util.log(JsonConvert.SerializeObject(request));
-                    kp_util.log("a normal save using client data");
+                    qp_util.log(JsonConvert.SerializeObject(request));
+                    qp_util.log("a normal save using client data");
 
                     response.result = "ok";
                     response.reason = "normal save";
@@ -100,8 +100,8 @@ namespace keep.Pages
                 }
                 else // client had an out-of-date timestamp because somebody else updated data
                 {
-                    kp_util.log(JsonConvert.SerializeObject(request));
-                    kp_util.log("using server data, telling client to resync");
+                    qp_util.log(JsonConvert.SerializeObject(request));
+                    qp_util.log("using server data, telling client to resync");
 
                     response.result = "resync";
                     response.reason = "stale client timestamp";
@@ -113,8 +113,8 @@ namespace keep.Pages
             }
             else
             {
-                kp_util.log(JsonConvert.SerializeObject(request));
-                kp_util.log("file not found, creating new file using client data");
+                qp_util.log(JsonConvert.SerializeObject(request));
+                qp_util.log("file not found, creating new file using client data");
 
                 response.result = "ok";
                 response.reason = "new file";
