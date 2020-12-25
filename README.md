@@ -45,3 +45,5 @@ somebody_else:a_better_password
 Start the server - or not.
 
 Save the file wwwroot/qeep.html. That's your client. When you are offline, it saves note data in browser "localStorage". When you are online it uploads the data to the server. 
+
+Note that for now, on both server and client, passwords are saved in clear, plain text without encryption.
