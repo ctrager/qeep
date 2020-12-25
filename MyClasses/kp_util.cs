@@ -17,17 +17,8 @@ namespace keep
 
     public static class kp_util
     {
-        public const string KEEP_SESSION_ID = "KEEP_SESSION_ID";
-        public const bool MUST_BE_ADMIN = true;
-        public const string CREATE_WAS_SUCCESSFUL = "Create was successful.";
-        public const string UPDATE_WAS_SUCCESSFUL = "Update was successful.";
-        public const string NAME_ALREADY_USED = "Name is already being used.";
-        public const string NAME_IS_REQUIRED = "Name is required.";
-        public const string NEXT_URL = "next_url";
-        public const int SYSTEM_USER_ID = 1;
 
         static Serilog.ILogger _logger = null;
-
 
         public static void init_serilog_context()
         {

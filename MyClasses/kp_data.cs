@@ -82,6 +82,9 @@ namespace keep
         {
             string data_folder = kp_config.get(kp_config.DataFolder);
 
+            // It would be bad if multiple threads were writing to the 
+            // file system at the same time. 
+
             lock (my_lock)
             {
                 foreach (Note note in note_data.notes)
@@ -96,6 +99,7 @@ namespace keep
                 kp_util.log(json);
                 System.IO.File.WriteAllText(path, json);
 
+                // also commit change to git, so that we have history, data recovery
                 kp_util.run_command("git", "add .");
                 kp_util.run_command("git", "commit -m \""
                     + DateTime.Now.ToUniversalTime().ToString("yyyyMMdd_HHmmss_fff")
