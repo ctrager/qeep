@@ -71,6 +71,7 @@ namespace qeep
         .ConfigureWebHostDefaults(webBuilder =>
         {
             webBuilder.UseStartup<Startup>();
+            webBuilder.UseUrls("http://localhost:5003");
             webBuilder.UseKestrel(options =>
             {
                 // Because we will control it with nginx,
