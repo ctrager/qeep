@@ -1,0 +1,77 @@
+server {
+    server_name   budoco.net *.budoco.net;
+    location / {
+        proxy_pass         http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        # corey added
+        client_max_body_size 20m;
+
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/budoco.net/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/budoco.net/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = budoco.net) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen        80;
+    server_name   budoco.net *.budoco.net;
+    return 404; # managed by Certbot
+
+
+}
+
+server {
+    server_name   qeep.xyz;
+    location / {
+	proxy_pass http://localhost:5003;
+
+	if ($request_method = 'OPTIONS') {
+	  add_header 'Access-Control-Allow-Origin' '*';
+	  add_header 'Access-Control-Allow-Methods' '*';
+          add_header 'Access-Control-Allow-Headers' '*';
+          #
+          # Tell client that this pre-flight info is valid for 20 days
+          #
+          add_header 'Access-Control-Max-Age' 1728000;
+          add_header 'Content-Type' 'text/plain; charset=utf-8';
+          add_header 'Content-Length' 0;
+          return 204;
+       }
+   }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/qeep.xyz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/qeep.xyz/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+
+server {
+    if ($host = qeep.xyz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen        80;
+    server_name   qeep.xyz;
+    return 404; # managed by Certbot
+
+
+}
