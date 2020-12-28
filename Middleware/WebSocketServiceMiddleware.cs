@@ -5,19 +5,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-
-using Microsoft.AspNetCore.Builder;
-
-
 namespace qeep
 {
     public class WebSocketServerMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public WebSocketServerMiddleware(RequestDelegate next)
+        private readonly ConnectionManager _manager;
+
+
+        public WebSocketServerMiddleware(RequestDelegate next, ConnectionManager manager)
         {
             _next = next;
+            _manager = manager;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -27,6 +27,8 @@ namespace qeep
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
                 Console.WriteLine("WebSocket Connected");
+
+                string ConnID = _manager.AddSocket(webSocket);
 
                 await Receive(webSocket, async (result, buffer) =>
                 {

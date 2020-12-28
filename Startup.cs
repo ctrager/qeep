@@ -71,6 +71,7 @@ namespace qeep
                     );
                 });
 
+            services.AddConnectionManager();
 
             // services.Configure<ApiBehaviorOptions>(options =>
             // {
@@ -133,40 +134,8 @@ namespace qeep
 
             app.UseWebSockets();
 
-            app.UseCorey();
-
-
-            // app.Use(async (context, next) =>
-            // {
-            //     WriteRequestParam(context, env);
-
-            //     if (context.WebSockets.IsWebSocketRequest)
-            //     {
-            //         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-            //         Console.WriteLine("WebSocket Connected");
-
-            //         await ReceiveMessage(webSocket, async (result, buffer) =>
-            //           {
-            //               if (result.MessageType == WebSocketMessageType.Text)
-            //               {
-            //                   Console.WriteLine($"Receive->Text");
-
-            //                   return;
-            //               }
-            //               else if (result.MessageType == WebSocketMessageType.Close)
-            //               {
-            //                   Console.WriteLine($"Receive->Close");
-
-            //                   return;
-            //               }
-            //           });
-
-            //     }
-            //     else
-            //     {
-            //         await next();
-            //     }
-            // });
+            // https://dotnetplaybook.com/which-is-best-websockets-or-signalr/
+            app.UseQeepWebSocketMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
