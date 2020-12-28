@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.Extensions;
 using Serilog;
 using Microsoft.AspNetCore.HttpOverrides;
+using System.Net.WebSockets;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace qeep
 {
@@ -48,13 +52,6 @@ namespace qeep
 
             services.AddRazorPages();
 
-            // if nginx is not on same machine
-            // services.Configure<ForwardedHeadersOptions>(options =>
-            // {
-            //     options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
-            // });
-
-
             services.AddCors(options =>
                 {
                     options.AddPolicy("CoreyPolicy",
@@ -67,13 +64,7 @@ namespace qeep
                     );
                 });
 
-
-            // services.Configure<ApiBehaviorOptions>(options =>
-            // {
-            //     options.SuppressModelStateInvalidFilter = true;
-
-            // });
-
+            services.AddConnectionManager();
 
         }
 
@@ -126,11 +117,50 @@ namespace qeep
 
             });
 
+
+            app.UseWebSockets();
+
+            // https://dotnetplaybook.com/which-is-best-websockets-or-signalr/
+            app.UseQeepWebSocketMiddleware();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
             });
 
         }
+
+        public void WriteRequestParam(HttpContext context, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                Console.WriteLine("Request Method: " + context.Request.Method);
+                Console.WriteLine("Request Protocol: " + context.Request.Protocol);
+
+                if (context.Request.Headers != null)
+                {
+                    Console.WriteLine("Request Headers: ");
+                    foreach (var h in context.Request.Headers)
+                    {
+                        Console.WriteLine("--> " + h.Key + ": " + h.Value);
+                    }
+                }
+            }
+        }
+
+        private async Task ReceiveMessage(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
+        {
+            var buffer = new byte[1024 * 4];
+
+            while (socket.State == WebSocketState.Open)
+            {
+                var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
+                    cancellationToken: CancellationToken.None);
+                handleMessage(result, buffer);
+            }
+
+        }
+
     }
+
 }

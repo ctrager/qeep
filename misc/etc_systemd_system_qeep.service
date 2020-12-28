@@ -7,7 +7,7 @@ Description=Qeep at /root/qpublish
 WorkingDirectory=/root/qpublish
 
 #ExecStart=/usr/bin/dotnet /var/www/helloapp/helloapp.dll
-ExecStart=/root/qpublish/qeep
+ExecStart=/root/qpublish/qeep_server
 
 Restart=always
 

@@ -203,500 +203,540 @@
 
     </div>
 
-</body>
-<script>
+    <script>
+        "use strict"
 
-    var config = {
-        username: "",
-        password: "",
-        url: ""
-    }
-
-    //var url = "http://10.0.0.2:5000/Notes"
-
-    var seconds_before_save = 3
-    var seconds_before_poll = 12
-
-    var online = false
-    var data_source = ""
-    var local_note_data
-    const NOTE_DATA = "note_data"
-
-    document.addEventListener("DOMContentLoaded", function (event) {
-
-        load_config()
-
-        if (config.username == ""
-            || config.password == ""
-            || config.url == "") {
-            show_config_form()
-        }
-        else {
-            load_notes()
+        var config = {
+            username: "",
+            password: "",
+            url: ""
         }
 
-        // hook up listeners
-        get("new_button").addEventListener("click", create_new_note)
-        get("export_button").addEventListener("click", export_text)
-        get("configure_button").addEventListener("click", show_config_form)
-        get("close_config_button").addEventListener("click", close_config_form)
-        get("save_config_button").addEventListener("click", save_config)
-        get("clear_config_button").addEventListener("click", clear_config)
+        //var url = "http://10.0.0.2:5000/Notes"
 
-        get("position_input").addEventListener("change", change_position)
-        get("position_close").addEventListener("click", close_position_popup)
-        get("color_select").addEventListener("change", change_color)
-        get("color_close").addEventListener("click", close_color_popup)
+        var seconds_before_save = 3
+        var seconds_before_poll = 12
 
-    })
+        var online = false
+        var data_source = ""
+        var local_note_data
+        const NOTE_DATA = "note_data"
+        var socket = null
+        var socket_connection_id = ""
 
-    function show_config_form() {
-        get("config_form").style.display = "block"
-    }
+        document.addEventListener("DOMContentLoaded", function (event) {
 
-    function close_config_form() {
+            load_config()
 
-        if (config.username == ""
-            || config.password == ""
-            || config.url == "") {
-            alert("App won't run without config")
-
-        }
-        else {
-            get("config_form").style.display = "none"
-            // start!
-            load_notes()
-        }
-
-    }
-
-    function load_config() {
-        var c = JSON.parse(window.localStorage.getItem("config"))
-        if (c != null) {
-            config = c
-
-            get("username").value = config.username
-            password: get("password").value = config.password
-            get("url").value = config.url
-        }
-    }
-
-    function save_config() {
-        config = {
-            username: get("username").value,
-            password: get("password").value,
-            url: get("url").value
-        }
-
-        window.localStorage.setItem("config", JSON.stringify(config))
-    }
-
-    function clear_config() {
-        get("username").value = ""
-        password: get("password").value = ""
-        get("url").value = ""
-        save_config()
-    }
-
-    // post to server so that it can decide whether our data is the 
-    // latest greatest or its data
-    function load_notes() {
-        set_status("Loading")
-        get("notes_container").innerHTML = ""
-
-        local_note_data = JSON.parse(window.localStorage.getItem(NOTE_DATA))
-        console.log("load_notes", local_note_data)
-
-        if (local_note_data == null) {
-            local_note_data = {
-                server_timestamp: "1999", // so that we get what server has
-                new_timestamp: "1999",
-                notes: []
+            if (config.username == ""
+                || config.password == ""
+                || config.url == "") {
+                show_config_form()
             }
-            window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+            else {
+                load_notes()
+            }
+
+            // hook up listeners
+            get("new_button").addEventListener("click", create_new_note)
+            get("export_button").addEventListener("click", export_text)
+            get("configure_button").addEventListener("click", show_config_form)
+            get("close_config_button").addEventListener("click", close_config_form)
+            get("save_config_button").addEventListener("click", save_config)
+            get("clear_config_button").addEventListener("click", clear_config)
+
+            get("position_input").addEventListener("change", change_position)
+            get("position_close").addEventListener("click", close_position_popup)
+            get("color_select").addEventListener("change", change_color)
+            get("color_close").addEventListener("click", close_color_popup)
+
+        })
+
+        function show_config_form() {
+            get("config_form").style.display = "block"
         }
 
-        build_notes_from_object_array(local_note_data.notes)
-        post_to_server(true) // first time
+        function close_config_form() {
 
-    }
+            if (config.username == ""
+                || config.password == ""
+                || config.url == "") {
+                alert("App won't run without config")
 
-    function set_status(status) {
-        get("status").innerText = status
-    }
+            }
+            else {
+                get("config_form").style.display = "none"
+                // start!
+                load_notes()
+            }
 
-    function post_to_server() {
-        set_status("Posting to server")
-        var request_payload = {
-            username: config.username,
-            password: config.password,
-            server_timestamp: local_note_data.server_timestamp,
-            new_timestamp: local_note_data.new_timestamp,
-            notes: local_note_data.notes
         }
 
-        var request = new XMLHttpRequest();
+        function load_config() {
+            var c = JSON.parse(window.localStorage.getItem("config"))
+            if (c != null) {
+                config = c
 
-        // DONE == 4
-        request.onreadystatechange = function () {
-            if (request.readyState == XMLHttpRequest.DONE) {
-                console.log("onreadystatechange status", request.status)
+                get("username").value = config.username
+                password: get("password").value = config.password
+                get("url").value = config.url
+            }
+        }
 
-                if (request.status == 200) {
-                    data_source = "server"
-                    var response_payload = JSON.parse(request.responseText)
-                    console.log("incoming payload", response_payload)
+        function save_config() {
+            config = {
+                username: get("username").value,
+                password: get("password").value,
+                url: get("url").value
+            }
 
-                    if (response_payload.result == "failure") {
-                        alert(response_payload.reason)
-                    }
-                    else if (response_payload.result == "ok" && response_payload.reason == "no change") {
-                        // do nothing
-                        // console.log("doing nothing")
-                    }
-                    else {
-                        console.log("ok or resync")
-                        // result = ok or resync
-                        // Sync ourselves to server
-                        local_note_data.server_timestamp = response_payload.timestamp
-                        local_note_data.new_timestamp = response_payload.timestamp
-                        local_note_data.notes = response_payload.notes
-                        window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+            window.localStorage.setItem("config", JSON.stringify(config))
+        }
 
-                        if (response_payload.result == "resync") {
-                            // this should only happen if another client
-                            // updated data while we held a stale timestamp
-                            set_status("Resyncing with server")
-                            console.log("using server data instead of our data")
+        function clear_config() {
+            get("username").value = ""
+            password: get("password").value = ""
+            get("url").value = ""
+            save_config()
+        }
 
-                            get("notes_container").innerHTML = ""
-                            build_notes_from_object_array(local_note_data.notes)
+        // post to server so that it can decide whether our data is the 
+        // latest greatest or its data
+        function load_notes() {
+            set_status("Loading")
+            get("notes_container").innerHTML = ""
+
+            local_note_data = JSON.parse(window.localStorage.getItem(NOTE_DATA))
+            console.log("load_notes", local_note_data)
+
+            if (local_note_data == null) {
+                local_note_data = {
+                    server_timestamp: "1999", // so that we get what server has
+                    new_timestamp: "1999",
+                    notes: []
+                }
+                window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+            }
+
+            build_notes_from_object_array(local_note_data.notes)
+
+            post_to_server() // first time
+
+        }
+
+        function set_status(status) {
+            get("status").innerText = status
+        }
+
+        function post_to_server() {
+            set_status("Posting to server")
+            var request_payload = {
+                socket_connection_id: socket_connection_id,
+                username: config.username,
+                password: config.password,
+                server_timestamp: local_note_data.server_timestamp,
+                new_timestamp: local_note_data.new_timestamp,
+                notes: local_note_data.notes
+            }
+
+            var request = new XMLHttpRequest();
+
+            // DONE == 4
+            request.onreadystatechange = function () {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    console.log("onreadystatechange status", request.status)
+
+                    if (request.status == 200) {
+                        data_source = "server"
+                        var response_payload = JSON.parse(request.responseText)
+                        console.log("incoming payload", response_payload)
+
+                        if (response_payload.result == "failure") {
+                            alert(response_payload.reason)
                         }
+                        else if (response_payload.result == "ok" && response_payload.reason == "no change") {
+                            // do nothing
+                            // console.log("doing nothing")
+                        }
+                        else {
+                            console.log("ok or resync")
+                            // result = ok or resync
+                            // Sync ourselves to server
+                            local_note_data.server_timestamp = response_payload.timestamp
+                            local_note_data.new_timestamp = response_payload.timestamp
+                            local_note_data.notes = response_payload.notes
+                            window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+
+                            if (response_payload.result == "resync") {
+                                // this should only happen if another client
+                                // updated data while we held a stale timestamp
+                                set_status("Resyncing with server")
+                                console.log("using server data instead of our data")
+
+                                build_notes_from_object_array(local_note_data.notes)
+                            }
+                        }
+                        set_status("In sync with server")
+                    } // end http status 200
+                    else {
+                        set_status("No response from server. Offline.")
+                        data_source = "local"
                     }
-                    set_status("In sync with server")
-                } // end http status 200
-                else {
-                    set_status("No response from server. Offline.")
-                    data_source = "local"
+
+                    console.log("data_source", data_source)
+
+                    open_websocket()
+
+                } // done
+            } // state change
+
+            request.open("POST", config.url, true);
+            request.setRequestHeader("Content-type", "application/json");
+
+            var json = JSON.stringify(request_payload)
+            console.log("posting", json)
+
+            request.send(JSON.stringify(request_payload));
+
+        }
+
+        function open_websocket() {
+
+            if (socket != null) {
+                console.log("socket.readyState", socket.readyState)
+                if (socket.readyState != WebSocket.CLOSED) {
+                    return
                 }
+            }
 
-                console.log("data_source", data_source)
+            var socket_url = config.url.replace("https", "ws");
+            socket_url = socket_url.replace("http", "ws");
+            socket_url = socket_url.replace("Notes", "")
+            console.log(socket_url)
 
-                // check server in case OTHER clients have updated data
-                if (timer2 != null) {
-                    clearTimeout(timer2)
+            socket = new WebSocket(socket_url)
+
+            socket.onopen = function (event) {
+                console.log("socket onopen", socket.readyState, event)
+            }
+
+            socket.onclose = function (event) {
+                console.log("socket onclose", socket.readyState, event)
+                socket_connection_id = ""
+                socket = null
+            }
+
+            socket.onerror = function (event) {
+                console.log("socket onerror", socket.readyState, event)
+            }
+
+            socket.onmessage = function (event) {
+                console.log("socket onmessage", socket.readyState, event)
+                console.log(event.data)
+                var payload = JSON.parse(event.data)
+
+                if (payload.message_type == "id") {
+                    socket_connection_id = payload.socket_connection_id
                 }
-                timer2 = setTimeout(function () {post_to_server()}, 1000 * seconds_before_poll)
-
-            } // done
-        } // state change
-
-        request.open("POST", config.url, true);
-        request.setRequestHeader("Content-type", "application/json");
-
-        var json = JSON.stringify(request_payload)
-        console.log("posting", json)
-
-        request.send(JSON.stringify(request_payload));
-
-    }
-
-    function build_notes_from_object_array(notes_object_array) {
-
-        console.log("build_notes_from_object_array", notes_object_array)
-        if (notes_object_array != null) {
-            for (i = 0; i < notes_object_array.length; i++) {
-                var note_object = notes_object_array[i]
-                build_note(note_object)
+                else if (payload.message_type == "update") {
+                    load_notes()
+                }
             }
         }
-    }
+
+        function build_notes_from_object_array(notes_object_array) {
+
+            get("notes_container").innerHTML = ""
+
+            console.log("build_notes_from_object_array", notes_object_array)
+            if (notes_object_array != null) {
+                for (var i = 0; i < notes_object_array.length; i++) {
+                    var note_object = notes_object_array[i]
+                    build_note(note_object)
+                }
+            }
+        }
 
 
-    function save_notes() {
+        function save_notes() {
 
-        console.log("save notes")
-        set_status("Saving data locally")
+            console.log("save notes")
+            set_status("Saving data locally")
 
-        var note_elements = document.getElementsByClassName("note")
+            var note_elements = document.getElementsByClassName("note")
 
-        local_note_data.notes = []
+            local_note_data.notes = []
 
-        for (i = 0; i < note_elements.length; i++) {
-            var note_el = note_elements[i]
-            var textarea = note_el.getElementsByClassName("note_textarea")[0]
-            var text = textarea.value
+            for (var i = 0; i < note_elements.length; i++) {
+                var note_el = note_elements[i]
+                var textarea = note_el.getElementsByClassName("note_textarea")[0]
+                var text = textarea.value
 
-            local_note_data.notes.push({
-                id: note_el.id,
-                text: text,
-                position: note_el.style.order,
-                color: textarea.style.backgroundColor
+                local_note_data.notes.push({
+                    id: note_el.id,
+                    text: text,
+                    position: note_el.style.order,
+                    color: textarea.style.backgroundColor
+                })
+            }
+
+            local_note_data.new_timestamp = get_now_as_string()
+            window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+
+            post_to_server()
+        }
+
+        function get(id) {
+            return document.getElementById(id)
+        }
+
+        // save each note as a text file
+        function export_text() {
+
+            if (!confirm("This will save a file for each note in your Downloads folder.\n\nAre you sure you want to continue?")) {
+                return;
+            }
+
+            var note_elements = document.getElementsByClassName("note")
+            for (var i = 0; i < note_elements.length; i++) {
+                var note_el = note_elements[i]
+                var textarea = note_el.getElementsByClassName("note_textarea")[0]
+                var text = textarea.value
+                console.log(note_el.id, text)
+                create_and_click_on_download_link("qeep_" + note_el.id + ".txt", text)
+            }
+        }
+
+        function create_and_click_on_download_link(filename, text) {
+            var link = document.createElement('a');
+            link.setAttribute("download", filename)
+
+            link.setAttribute("href",
+                "data:text/plain;charset=utf-8," + encodeURIComponent(text))
+
+            document.body.appendChild(link);
+
+            // wait for the link to be added to the document, then "click" it
+            window.requestAnimationFrame(function () {
+                // clicking link
+                var event = new MouseEvent('click');
+                link.dispatchEvent(event);
+                document.body.removeChild(link);
             })
         }
 
-        local_note_data.new_timestamp = get_now_as_string()
-        window.localStorage.setItem(NOTE_DATA, JSON.stringify(local_note_data))
+        // create the note dom elements
+        function build_note(note_object) {
+            var template = get("note_template")
+            var note_el = template.cloneNode(true)
+            note_el.className = "note"
 
-        post_to_server()
-    }
+            note_el.id = note_object.id
+            note_el.style.order = note_object.position
 
-    function get(id) {
-        return document.getElementById(id)
-    }
-
-    // save each note as a text file
-    function export_text() {
-
-        if (!confirm("This will save a file for each note in your Downloads folder.\n\nAre you sure you want to continue?")) {
-            return;
-        }
-
-        var note_elements = document.getElementsByClassName("note")
-        for (i = 0; i < note_elements.length; i++) {
-            var note_el = note_elements[i]
             var textarea = note_el.getElementsByClassName("note_textarea")[0]
-            var text = textarea.value
-            console.log(note_el.id, text)
-            create_and_click_on_download_link("qeep_" + note_el.id + ".txt", text)
+            //textarea.innerText = note_object.text
+            textarea.value = note_object.text
+            textarea.style.backgroundColor = note_object.color
+            textarea.addEventListener("click", textarea_on_click)
+            textarea.addEventListener("input", textarea_on_input)
+
+            var position_el = note_el.getElementsByClassName("position")[0]
+            position_el.addEventListener("click", show_position_popup)
+
+            var color_el = note_el.getElementsByClassName("color")[0]
+            color_el.addEventListener("click", show_color_popup)
+
+            var delete_el = note_el.getElementsByClassName("delete")[0]
+            delete_el.addEventListener("click", show_delete_confirmation)
+
+            get("notes_container").appendChild(note_el)
+
+            note_el.style.display = "block"
         }
-    }
 
-    function create_and_click_on_download_link(filename, text) {
-        var link = document.createElement('a');
-        link.setAttribute("download", filename)
+        function textarea_on_input(event) {
+            resize_textarea(event.target)
+            set_status("Text changed")
+            on_change()
+        }
 
-        link.setAttribute("href",
-            "data:text/plain;charset=utf-8," + encodeURIComponent(text))
+        function textarea_on_click(event) {
 
-        document.body.appendChild(link);
+            // resize/shrink all the notes except the one we are editing
 
-        // wait for the link to be added to the document, then "click" it
-        window.requestAnimationFrame(function () {
-            // clicking link
-            var event = new MouseEvent('click');
-            link.dispatchEvent(event);
-            document.body.removeChild(link);
-        })
-    }
+            var textarea_array = document.getElementsByClassName("note_textarea")
+            for (var i = 0; i < textarea_array.length; i++) {
 
-    // create the note dom elements
-    function build_note(note_object) {
-        var template = get("note_template")
-        var note_el = template.cloneNode(true)
-        note_el.className = "note"
+                var textarea = textarea_array[i]
 
-        note_el.id = note_object.id
-        note_el.style.order = note_object.position
+                // skip the one we are editing
+                if (textarea.parentNode.id == event.target.parentNode.id) {
 
-        var textarea = note_el.getElementsByClassName("note_textarea")[0]
-        //textarea.innerText = note_object.text
-        textarea.value = note_object.text
-        textarea.style.backgroundColor = note_object.color
+                    continue;
+                }
 
-        position_el = note_el.getElementsByClassName("position")[0]
-        position_el.addEventListener("click", show_position_popup)
-
-        color_el = note_el.getElementsByClassName("color")[0]
-        color_el.addEventListener("click", show_color_popup)
-
-        delete_el = note_el.getElementsByClassName("delete")[0]
-        delete_el.addEventListener("click", show_delete_confirmation)
-
-        textarea = note_el.getElementsByClassName("note_textarea")[0]
-        textarea.addEventListener("click", textarea_on_click)
-        textarea.addEventListener("input", textarea_on_input)
-
-        get("notes_container").appendChild(note_el)
-
-        note_el.style.display = "block"
-    }
-
-    function textarea_on_input(event) {
-        resize_textarea(event.target)
-        set_status("Text changed")
-        on_change()
-    }
-
-    function textarea_on_click(event) {
-
-        // resize/shrink all the notes except the one we are editing
-
-        var textarea_array = document.getElementsByClassName("note_textarea")
-        for (i = 0; i < textarea_array.length; i++) {
-
-            var textarea = textarea_array[i]
-
-            // skip the one we are editing
-            if (textarea.parentNode.id == event.target.parentNode.id) {
-
-                continue;
+                textarea.style.width = "160px"
+                textarea.style.height = "80px"
             }
 
-            textarea.style.width = "160px"
-            textarea.style.height = "80px"
+            resize_textarea(event.target)
+            close_all()
         }
 
-        resize_textarea(event.target)
-        close_all()
-    }
+        function resize_textarea(textarea) {
 
-    function resize_textarea(textarea) {
+            // resize to get rid of scrollbars
 
-        // resize to get rid of scrollbars
+            textarea.style.width = 0
+            textarea.style.width = textarea.scrollWidth + "px"
 
-        textarea.style.width = 0
-        textarea.style.width = textarea.scrollWidth + "px"
+            textarea.style.height = 0
+            textarea.style.height = textarea.scrollHeight + "px"
 
-        textarea.style.height = 0
-        textarea.style.height = textarea.scrollHeight + "px"
-
-    }
-
-
-    var timer1 = null
-    var timer2 = null
-
-    function on_change() {
-
-        // timer2 is related to checking server periodically
-        clearTimeout(timer2)
-
-        if (timer1 != null) {
-            clearTimeout(timer1)
         }
 
-        // Save when the user is idle for N seconds
-        timer1 = setTimeout(
-            function () {
-                set_status("Saving data to server")
-                save_notes()
-            }, 1000 * seconds_before_save)
 
-    }
+        var timer1 = null
 
+        function on_change() {
 
-    function create_new_note() {
-        build_note({
-            id: get_now_as_string(),
-            text: "",
-            position: 1,
-            color: "white"
-        })
-    }
+            if (timer1 != null) {
+                clearTimeout(timer1)
+            }
 
+            // Save when the user is idle for N seconds
+            timer1 = setTimeout(
+                function () {
+                    set_status("Saving data to server")
+                    save_notes()
+                }, 1000 * seconds_before_save)
 
-    function show_delete_confirmation() {
-        close_all()
-        var confirmation = confirm("Are you sure you want to delete?")
-
-        if (!confirmation) {
-            return
         }
 
-        var note_el = event.target.parentNode.parentNode
-        note_el.remove()
 
-        // save
-        on_change()
-    }
-
-    function show_position_popup(event) {
-        close_all()
-        var popup = get("position_popup")
-        var note_el = event.target.parentNode.parentNode
-        popup.dataset.note_id = note_el.id
-        get("position_input").value = note_el.style.order
-
-        popup.style.top = (20 + note_el.offsetTop) + "px"
-        popup.style.left = (20 + note_el.offsetLeft) + "px"
-        popup.style.display = "block"
-    }
-
-    function show_color_popup(event) {
-        close_all()
-
-        var popup = get("color_popup")
-        var note_el = event.target.parentNode.parentNode
-        popup.dataset.note_id = note_el.id
-        var color_select = get("color_select")
-        var textarea = note_el.getElementsByClassName("note_textarea")[0]
-        color_select.value = textarea.style.backgroundColor
-        color_select.style.backgroundColor = textarea.style.backgroundColor
-
-        popup.style.top = (20 + note_el.offsetTop) + "px"
-        popup.style.left = (20 + note_el.offsetLeft) + "px"
-        popup.style.display = "block"
-    }
-
-    function close_all() {
-        close_position_popup()
-        close_color_popup()
-    }
-
-    function close_position_popup() {
-        var popup = get("position_popup")
-        popup.style.display = "none"
-    }
-
-    function close_color_popup() {
-        var popup = get("color_popup")
-        popup.style.display = "none"
-    }
-
-    function change_position(event) {
-        console.log("change_position", event.target.value)
-
-        // what position was entered
-        var position = event.target.value
-
-        // which note?
-        var id = event.target.parentNode.dataset.note_id
-        var note_el = get(id)
-
-        // change flex order, aka "position"
-        note_el.style.order = position
-
-        // save
-        on_change()
-    }
-
-    function change_color(event) {
-        console.log("change_color")
-
-        // get select element
-        var color_select = event.target
-
-        // what color was selected
-        var color = color_select.options[color_select.selectedIndex].value
-
-        // which note?
-        var id = event.target.parentNode.dataset.note_id
-        var note_el = get(id)
-
-        // change color
-        var textarea = note_el.getElementsByClassName("note_textarea")[0]
-        textarea.style.backgroundColor = color
-        color_select.style.backgroundColor = color
-
-        // save
-        on_change()
-    }
-
-    function get_now_as_string() {
-        var d = new Date()
-        var year = d.getUTCFullYear()
-        var month = d.getUTCMonth().toLocaleString("en-US", {minimumIntegerDigits: 2})
-        var day = d.getUTCDate().toLocaleString("en-US", {minimumIntegerDigits: 2})
-        var hour = d.getUTCHours().toLocaleString("en-US", {minimumIntegerDigits: 2})
-        var min = d.getUTCMinutes().toLocaleString("en-US", {minimumIntegerDigits: 2})
-        var sec = d.getUTCSeconds().toLocaleString("en-US", {minimumIntegerDigits: 2})
-        var mil = d.getUTCMilliseconds().toLocaleString("en-US", {minimumIntegerDigits: 3})
-
-        return year + month + day + "_" + hour + min + sec + "_" + mil
-    }
+        function create_new_note() {
+            build_note({
+                id: get_now_as_string(),
+                text: "",
+                position: 1,
+                color: "white"
+            })
+        }
 
 
-</script>
+        function show_delete_confirmation() {
+            close_all()
+            var confirmation = confirm("Are you sure you want to delete?")
 
+            if (!confirmation) {
+                return
+            }
+
+            var note_el = event.target.parentNode.parentNode
+            note_el.remove()
+
+            // save
+            on_change()
+        }
+
+        function show_position_popup(event) {
+            close_all()
+            var popup = get("position_popup")
+            var note_el = event.target.parentNode.parentNode
+            popup.dataset.note_id = note_el.id
+            get("position_input").value = note_el.style.order
+
+            popup.style.top = (20 + note_el.offsetTop) + "px"
+            popup.style.left = (20 + note_el.offsetLeft) + "px"
+            popup.style.display = "block"
+        }
+
+        function show_color_popup(event) {
+            close_all()
+
+            var popup = get("color_popup")
+            var note_el = event.target.parentNode.parentNode
+            popup.dataset.note_id = note_el.id
+            var color_select = get("color_select")
+            var textarea = note_el.getElementsByClassName("note_textarea")[0]
+            color_select.value = textarea.style.backgroundColor
+            color_select.style.backgroundColor = textarea.style.backgroundColor
+
+            popup.style.top = (20 + note_el.offsetTop) + "px"
+            popup.style.left = (20 + note_el.offsetLeft) + "px"
+            popup.style.display = "block"
+        }
+
+        function close_all() {
+            close_position_popup()
+            close_color_popup()
+        }
+
+        function close_position_popup() {
+            var popup = get("position_popup")
+            popup.style.display = "none"
+        }
+
+        function close_color_popup() {
+            var popup = get("color_popup")
+            popup.style.display = "none"
+        }
+
+        function change_position(event) {
+            console.log("change_position", event.target.value)
+
+            // what position was entered
+            var position = event.target.value
+
+            // which note?
+            var id = event.target.parentNode.dataset.note_id
+            var note_el = get(id)
+
+            // change flex order, aka "position"
+            note_el.style.order = position
+
+            // save
+            on_change()
+        }
+
+        function change_color(event) {
+            console.log("change_color")
+
+            // get select element
+            var color_select = event.target
+
+            // what color was selected
+            var color = color_select.options[color_select.selectedIndex].value
+
+            // which note?
+            var id = event.target.parentNode.dataset.note_id
+            var note_el = get(id)
+
+            // change color
+            var textarea = note_el.getElementsByClassName("note_textarea")[0]
+            textarea.style.backgroundColor = color
+            color_select.style.backgroundColor = color
+
+            // save
+            on_change()
+        }
+
+        function get_now_as_string() {
+            var d = new Date()
+            var year = d.getUTCFullYear()
+            var month = d.getUTCMonth().toLocaleString("en-US", {minimumIntegerDigits: 2})
+            var day = d.getUTCDate().toLocaleString("en-US", {minimumIntegerDigits: 2})
+            var hour = d.getUTCHours().toLocaleString("en-US", {minimumIntegerDigits: 2})
+            var min = d.getUTCMinutes().toLocaleString("en-US", {minimumIntegerDigits: 2})
+            var sec = d.getUTCSeconds().toLocaleString("en-US", {minimumIntegerDigits: 2})
+            var mil = d.getUTCMilliseconds().toLocaleString("en-US", {minimumIntegerDigits: 3})
+
+            return year + month + day + "_" + hour + min + sec + "_" + mil
+        }
+
+
+    </script>
+
+</body>
 </htm>

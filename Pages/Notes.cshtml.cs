@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 
 namespace qeep.Pages
 {
@@ -13,8 +15,16 @@ namespace qeep.Pages
     public class NotesModel : PageModel
     {
 
+        private readonly ConnectionManager _manager;
+
+        public NotesModel(ConnectionManager manager)
+        {
+            _manager = manager;
+        }
+
         public class PayloadIn
         {
+            public string socket_connection_id { get; set; }
             public string username { get; set; }
             public string password { get; set; }
             public string server_timestamp { get; set; }
@@ -32,7 +42,7 @@ namespace qeep.Pages
 
         qp_data db = new qp_data();
 
-        public JsonResult OnPost([FromBody] PayloadIn request)
+        public async Task<JsonResult> OnPost([FromBody] PayloadIn request)
         {
 
             //qp_util.log(JsonConvert.SerializeObject(request));
@@ -97,6 +107,8 @@ namespace qeep.Pages
                     // Pass client data back to client
                     response.timestamp = request.new_timestamp;
                     response.notes = request.notes;
+
+                    await _manager.NotifyOthersAsync(request.socket_connection_id, response.timestamp);
                 }
                 else // client had an out-of-date timestamp because somebody else updated data
                 {
@@ -109,6 +121,8 @@ namespace qeep.Pages
                     // return server data
                     response.timestamp = note_data.timestamp;
                     response.notes = note_data.notes;
+
+                    await _manager.NotifyOthersAsync(request.socket_connection_id, response.timestamp);
                 }
             }
             else
@@ -131,6 +145,7 @@ namespace qeep.Pages
 
             return new JsonResult(response);
         }
+
     }
 }
 
