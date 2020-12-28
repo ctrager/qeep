@@ -373,7 +373,6 @@
                                 set_status("Resyncing with server")
                                 console.log("using server data instead of our data")
 
-                                get("notes_container").innerHTML = ""
                                 build_notes_from_object_array(local_note_data.notes)
                             }
                         }
@@ -387,12 +386,6 @@
                     console.log("data_source", data_source)
 
                     open_websocket()
-
-                    // check server in case OTHER clients have updated data
-                    //if (timer2 != null) {
-                    //    clearTimeout(timer2)
-                    // }
-                    //timer2 = setTimeout(function () {post_to_server()}, 1000 * seconds_before_poll)
 
                 } // done
             } // state change
@@ -416,34 +409,44 @@
                 }
             }
 
-            var socket_url = config.url.replace("https", "w");
+            var socket_url = config.url.replace("https", "ws");
             socket_url = socket_url.replace("http", "ws");
             socket_url = socket_url.replace("Notes", "")
             console.log(socket_url)
 
-            socket = new WebSocket(socket_url);
+            socket = new WebSocket(socket_url)
+
             socket.onopen = function (event) {
                 console.log("socket onopen", socket.readyState, event)
-            };
+            }
+
             socket.onclose = function (event) {
                 console.log("socket onclose", socket.readyState, event)
-            };
+                socket_connection_id = ""
+                socket = null
+            }
+
             socket.onerror = function (event) {
                 console.log("socket onerror", socket.readyState, event)
             }
+
             socket.onmessage = function (event) {
                 console.log("socket onmessage", socket.readyState, event)
                 console.log(event.data)
                 var payload = JSON.parse(event.data)
+
                 if (payload.message_type == "id") {
                     socket_connection_id = payload.socket_connection_id
                 }
-                console.log(payload)
-            };
-
+                else if (payload.message_type == "update") {
+                    load_notes()
+                }
+            }
         }
 
         function build_notes_from_object_array(notes_object_array) {
+
+            get("notes_container").innerHTML = ""
 
             console.log("build_notes_from_object_array", notes_object_array)
             if (notes_object_array != null) {
@@ -595,12 +598,8 @@
 
 
         var timer1 = null
-        var timer2 = null
 
         function on_change() {
-
-            // timer2 is related to checking server periodically
-            clearTimeout(timer2)
 
             if (timer1 != null) {
                 clearTimeout(timer1)

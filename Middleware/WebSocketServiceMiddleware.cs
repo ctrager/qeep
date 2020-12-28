@@ -2,11 +2,9 @@
 
 using System;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using System.Linq;
 
 namespace qeep
 {
@@ -15,6 +13,8 @@ namespace qeep
         private readonly RequestDelegate _next;
 
         private readonly ConnectionManager _manager;
+
+        private byte[] _buffer = new byte[1024 * 4];
 
         public WebSocketServerMiddleware(RequestDelegate next, ConnectionManager manager)
         {
@@ -27,62 +27,43 @@ namespace qeep
             if (context.WebSockets.IsWebSocketRequest)
             {
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
-                Console.WriteLine("WebSocket Connected");
-
-                string socket_connection_id = _manager.AddSocket(webSocket);
-
-                await SendConnIDAsync(webSocket, socket_connection_id); //Call to new method here
+                await _manager.OnAcceptSocketAsync(webSocket);
 
                 await Receive(webSocket, async (result, buffer) =>
                 {
-                    if (result.MessageType == WebSocketMessageType.Text)
+                    // if (result.MessageType == WebSocketMessageType.Text)
+                    // {
+                    //     Console.WriteLine($"Receive->Text");
+                    //     Console.WriteLine($"Message: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
+                    //     return;
+                    // }
+                    // else 
+
+                    qp_util.log("WebSocket Middleware Recieve " + Enum.GetName(typeof(WebSocketMessageType), result.MessageType));
+
+                    if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        Console.WriteLine($"Receive->Text");
-                        Console.WriteLine($"Message: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
-                        return;
-                    }
-                    else if (result.MessageType == WebSocketMessageType.Close)
-                    {
-                        Console.WriteLine("Managed Connections: " + _manager.GetAllSockets().Count.ToString());
-
-                        string id = _manager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;
-                        Console.WriteLine($"Receive->Close");
-
-                        _manager.GetAllSockets().TryRemove(id, out WebSocket sock);
-                        Console.WriteLine("Managed Connections: " + _manager.GetAllSockets().Count.ToString());
-
-                        await sock.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-
-                        return;
+                        await _manager.OnCloseSocketAsync(webSocket, result);
                     }
                 });
             }
             else
             {
-                Console.WriteLine("Hello from 2nd Request Delegate - No WebSocket");
+                // not a websocket request
                 await _next(context);
             }
         }
 
         private async Task Receive(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
         {
-            var buffer = new byte[1024 * 4];
-
             while (socket.State == WebSocketState.Open)
             {
-                var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
-                                                       cancellationToken: CancellationToken.None);
+                var result = await socket.ReceiveAsync(
+                    buffer: new ArraySegment<byte>(_buffer),
+                    cancellationToken: CancellationToken.None);
 
-                handleMessage(result, buffer);
+                handleMessage(result, _buffer);
             }
-        }
-
-        private async Task SendConnIDAsync(WebSocket socket, string socket_connection_id)
-        {
-            var buffer = Encoding.UTF8.GetBytes(
-                @"{""message_type"": ""id"", ""socket_connection_id"": """ + socket_connection_id + @"""}");
-            await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
 }
