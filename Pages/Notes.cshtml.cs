@@ -44,9 +44,6 @@ namespace qeep.Pages
 
         public async Task<JsonResult> OnPost([FromBody] PayloadIn request)
         {
-
-            //qp_util.log(JsonConvert.SerializeObject(request));
-
             var response = new PayloadOut();
 
             db.load_users();

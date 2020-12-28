@@ -29,6 +29,8 @@ namespace qeep
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                 await _manager.OnAcceptSocketAsync(webSocket);
 
+                // the "async (result, buffer) =>" is the "handleMessage" in Receive
+
                 await Receive(webSocket, async (result, buffer) =>
                 {
                     // if (result.MessageType == WebSocketMessageType.Text)
@@ -58,11 +60,20 @@ namespace qeep
         {
             while (socket.State == WebSocketState.Open)
             {
-                var result = await socket.ReceiveAsync(
-                    buffer: new ArraySegment<byte>(_buffer),
-                    cancellationToken: CancellationToken.None);
+                try
+                {
+                    var result = await socket.ReceiveAsync(
+                        buffer: new ArraySegment<byte>(_buffer),
+                        cancellationToken: CancellationToken.None);
 
-                handleMessage(result, _buffer);
+                    handleMessage(result, _buffer);
+                }
+                catch (Exception e)
+                {
+                    // if the client crashes without sending us the close
+                    qp_util.log(e.ToString() + ", " + e.Message);
+                    await _manager.OnCloseSocketAsync(socket, null);
+                }
             }
         }
     }

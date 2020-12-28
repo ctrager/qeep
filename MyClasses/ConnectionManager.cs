@@ -14,12 +14,18 @@ namespace qeep
     {
         private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
 
+        private object my_lock = new object();
+
         public async Task OnAcceptSocketAsync(WebSocket socket)
         {
             string connection_id = Guid.NewGuid().ToString();
             qp_util.log("OnAcceptSocketAsync " + connection_id);
 
-            _sockets.TryAdd(connection_id, socket);
+            lock (my_lock)
+            {
+                _sockets.TryAdd(connection_id, socket);
+                qp_util.log("# of sockets " + _sockets.Count.ToString());
+            }
 
             await SendConnectionIdAsync(socket, connection_id); //Call to new method here
 
@@ -31,14 +37,19 @@ namespace qeep
 
             qp_util.log("OnCloseSocketAsync " + connection_id);
 
-            _sockets.TryRemove(connection_id, out WebSocket sock);
+            lock (my_lock)
+            {
+                _sockets.TryRemove(connection_id, out WebSocket sock);
+                qp_util.log("# of sockets " + _sockets.Count.ToString());
+            }
 
-            qp_util.log("# of sockets " + _sockets.Count.ToString());
-
-            await socket.CloseAsync(
-                result.CloseStatus.Value,
-                result.CloseStatusDescription,
-                CancellationToken.None);
+            if (result is not null)
+            {
+                await socket.CloseAsync(
+                    result.CloseStatus.Value,
+                    result.CloseStatusDescription,
+                    CancellationToken.None);
+            }
 
         }
 
