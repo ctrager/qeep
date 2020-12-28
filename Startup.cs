@@ -52,13 +52,6 @@ namespace qeep
 
             services.AddRazorPages();
 
-            // if nginx is not on same machine
-            // services.Configure<ForwardedHeadersOptions>(options =>
-            // {
-            //     options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
-            // });
-
-
             services.AddCors(options =>
                 {
                     options.AddPolicy("CoreyPolicy",
@@ -72,13 +65,6 @@ namespace qeep
                 });
 
             services.AddConnectionManager();
-
-            // services.Configure<ApiBehaviorOptions>(options =>
-            // {
-            //     options.SuppressModelStateInvalidFilter = true;
-
-            // });
-
 
         }
 
@@ -173,7 +159,6 @@ namespace qeep
                 handleMessage(result, buffer);
             }
 
-            //return Task<"">;
         }
 
     }

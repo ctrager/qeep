@@ -1,3 +1,5 @@
+// From https://dotnetplaybook.com/which-is-best-websockets-or-signalr/
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

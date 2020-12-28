@@ -1,3 +1,5 @@
+// From https://dotnetplaybook.com/which-is-best-websockets-or-signalr/
+
 using System;
 using System.Collections.Concurrent;
 using System.Net.WebSockets;

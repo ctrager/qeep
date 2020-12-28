@@ -1,9 +1,12 @@
+// From https://dotnetplaybook.com/which-is-best-websockets-or-signalr/
+
 using System;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace qeep
 {
@@ -12,7 +15,6 @@ namespace qeep
         private readonly RequestDelegate _next;
 
         private readonly ConnectionManager _manager;
-
 
         public WebSocketServerMiddleware(RequestDelegate next, ConnectionManager manager)
         {
@@ -28,7 +30,9 @@ namespace qeep
 
                 Console.WriteLine("WebSocket Connected");
 
-                string ConnID = _manager.AddSocket(webSocket);
+                string socket_connection_id = _manager.AddSocket(webSocket);
+
+                await SendConnIDAsync(webSocket, socket_connection_id); //Call to new method here
 
                 await Receive(webSocket, async (result, buffer) =>
                 {
@@ -40,7 +44,15 @@ namespace qeep
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
+                        Console.WriteLine("Managed Connections: " + _manager.GetAllSockets().Count.ToString());
+
+                        string id = _manager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;
                         Console.WriteLine($"Receive->Close");
+
+                        _manager.GetAllSockets().TryRemove(id, out WebSocket sock);
+                        Console.WriteLine("Managed Connections: " + _manager.GetAllSockets().Count.ToString());
+
+                        await sock.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
 
                         return;
                     }
@@ -64,6 +76,13 @@ namespace qeep
 
                 handleMessage(result, buffer);
             }
+        }
+
+        private async Task SendConnIDAsync(WebSocket socket, string socket_connection_id)
+        {
+            var buffer = Encoding.UTF8.GetBytes(
+                @"{""message_type"": ""id"", ""socket_connection_id"": """ + socket_connection_id + @"""}");
+            await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
 }

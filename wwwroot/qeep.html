@@ -206,8 +206,6 @@
     <script>
         "use strict"
 
-
-
         var config = {
             username: "",
             password: "",
@@ -223,6 +221,8 @@
         var data_source = ""
         var local_note_data
         const NOTE_DATA = "note_data"
+        var socket = null
+        var socket_connection_id = ""
 
         document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -319,7 +319,8 @@
             }
 
             build_notes_from_object_array(local_note_data.notes)
-            post_to_server(true) // first time
+
+            post_to_server() // first time
 
         }
 
@@ -330,6 +331,7 @@
         function post_to_server() {
             set_status("Posting to server")
             var request_payload = {
+                socket_connection_id: socket_connection_id,
                 username: config.username,
                 password: config.password,
                 server_timestamp: local_note_data.server_timestamp,
@@ -384,11 +386,13 @@
 
                     console.log("data_source", data_source)
 
+                    open_websocket()
+
                     // check server in case OTHER clients have updated data
-                    if (timer2 != null) {
-                        clearTimeout(timer2)
-                    }
-                    timer2 = setTimeout(function () {post_to_server()}, 1000 * seconds_before_poll)
+                    //if (timer2 != null) {
+                    //    clearTimeout(timer2)
+                    // }
+                    //timer2 = setTimeout(function () {post_to_server()}, 1000 * seconds_before_poll)
 
                 } // done
             } // state change
@@ -400,6 +404,42 @@
             console.log("posting", json)
 
             request.send(JSON.stringify(request_payload));
+
+        }
+
+        function open_websocket() {
+
+            if (socket != null) {
+                console.log("socket.readyState", socket.readyState)
+                if (socket.readyState != WebSocket.CLOSED) {
+                    return
+                }
+            }
+
+            var socket_url = config.url.replace("https", "w");
+            socket_url = socket_url.replace("http", "ws");
+            socket_url = socket_url.replace("Notes", "")
+            console.log(socket_url)
+
+            socket = new WebSocket(socket_url);
+            socket.onopen = function (event) {
+                console.log("socket onopen", socket.readyState, event)
+            };
+            socket.onclose = function (event) {
+                console.log("socket onclose", socket.readyState, event)
+            };
+            socket.onerror = function (event) {
+                console.log("socket onerror", socket.readyState, event)
+            }
+            socket.onmessage = function (event) {
+                console.log("socket onmessage", socket.readyState, event)
+                console.log(event.data)
+                var payload = JSON.parse(event.data)
+                if (payload.message_type == "id") {
+                    socket_connection_id = payload.socket_connection_id
+                }
+                console.log(payload)
+            };
 
         }
 
@@ -424,7 +464,7 @@
 
             local_note_data.notes = []
 
-            for (i = 0; i < note_elements.length; i++) {
+            for (var i = 0; i < note_elements.length; i++) {
                 var note_el = note_elements[i]
                 var textarea = note_el.getElementsByClassName("note_textarea")[0]
                 var text = textarea.value
@@ -455,7 +495,7 @@
             }
 
             var note_elements = document.getElementsByClassName("note")
-            for (i = 0; i < note_elements.length; i++) {
+            for (var i = 0; i < note_elements.length; i++) {
                 var note_el = note_elements[i]
                 var textarea = note_el.getElementsByClassName("note_textarea")[0]
                 var text = textarea.value
@@ -523,7 +563,7 @@
             // resize/shrink all the notes except the one we are editing
 
             var textarea_array = document.getElementsByClassName("note_textarea")
-            for (i = 0; i < textarea_array.length; i++) {
+            for (var i = 0; i < textarea_array.length; i++) {
 
                 var textarea = textarea_array[i]
 
