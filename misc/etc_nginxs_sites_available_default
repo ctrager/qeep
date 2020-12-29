@@ -36,22 +36,19 @@ server {
 
 server {
     server_name   qeep.xyz;
-    location / {
-	proxy_pass http://localhost:5003;
 
-	if ($request_method = 'OPTIONS') {
-	  add_header 'Access-Control-Allow-Origin' '*';
-	  add_header 'Access-Control-Allow-Methods' '*';
-          add_header 'Access-Control-Allow-Headers' '*';
-          #
-          # Tell client that this pre-flight info is valid for 20 days
-          #
-          add_header 'Access-Control-Max-Age' 1728000;
-          add_header 'Content-Type' 'text/plain; charset=utf-8';
-          add_header 'Content-Length' 0;
-          return 204;
-       }
-   }
+    location /Notes {
+        proxy_pass http://localhost:5003;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+# for the websockets
+    location / {
+        proxy_pass http://localhost:5003;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
 
     listen 443 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/qeep.xyz/fullchain.pem; # managed by Certbot
