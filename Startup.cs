@@ -11,6 +11,7 @@ using System.Net.WebSockets;
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace qeep
 {
@@ -103,6 +104,12 @@ namespace qeep
             // corey added a step in the pipeline
             app.Use(async (context, next) =>
             {
+                foreach (string key in context.Request.Headers.Keys)
+                {
+                    var v = context.Request.Headers[key];
+
+                    qp_util.log(key + "=" + v.ToString());
+                }
                 qp_util.log("Startup.cs 1 URL: " + context.Request.GetDisplayUrl());
                 qp_util.log("Startup.cs 2 URL: " + context.WebSockets.IsWebSocketRequest.ToString());
                 await next.Invoke();
@@ -113,8 +120,6 @@ namespace qeep
             //app.UseAuthorization();
 
             app.UseSerilogRequestLogging();
-
-
 
             app.UseWebSockets();
 
