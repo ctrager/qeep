@@ -409,9 +409,9 @@
                 }
             }
 
-            var socket_url = config.url.replace("https", "ws");
+            var socket_url = config.url.replace("https", "wss");
             socket_url = socket_url.replace("http", "ws");
-            socket_url = socket_url.replace("Notes", "")
+            socket_url = socket_url.replace("/Notes", "")
             console.log(socket_url)
 
             socket = new WebSocket(socket_url)

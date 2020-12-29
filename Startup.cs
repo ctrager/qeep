@@ -20,7 +20,6 @@ namespace qeep
         {
             qp_util.log("Startup");
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -65,7 +64,6 @@ namespace qeep
                 });
 
             services.AddConnectionManager();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,20 +100,20 @@ namespace qeep
 
             app.UseStaticFiles();
 
+            // corey added a step in the pipeline
+            app.Use(async (context, next) =>
+            {
+                qp_util.log("Startup.cs 1 URL: " + context.Request.GetDisplayUrl());
+                qp_util.log("Startup.cs 2 URL: " + context.WebSockets.IsWebSocketRequest.ToString());
+                await next.Invoke();
+            });
+
             app.UseRouting();
 
             //app.UseAuthorization();
 
             app.UseSerilogRequestLogging();
 
-            // corey added a step in the pipeline
-            app.Use(async (context, next) =>
-            {
-
-                //qp_util.log("Startup.cs URL: " + context.Request.GetDisplayUrl());
-                await next.Invoke();
-
-            });
 
 
             app.UseWebSockets();
@@ -158,9 +156,6 @@ namespace qeep
                     cancellationToken: CancellationToken.None);
                 handleMessage(result, buffer);
             }
-
         }
-
     }
-
 }
