@@ -17,7 +17,6 @@
     button {
         font-size: 14px;
         font-family: arial;
-        overflow-anchor: none;
     }
 
     .note,
@@ -26,7 +25,6 @@
         background: transparent;
         order: 0;
         margin: 10px;
-        overflow-anchor: none;
     }
 
     .note_textarea {
@@ -40,11 +38,7 @@
         font-size: 14px;
         padding: 4px;
         border: 1px solid black;
-        xborder-top-left-radius: 6px;
-        xborder-top-right-radius: 6px;
         overflow: auto;
-
-        /* change here and constants NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT */
         min-width: 160px;
         min-height: 80px;
     }
@@ -102,7 +96,7 @@
         margin: 12px;
     }
 
-    #position_input {
+    #position_select {
         padding: 3px;
         margin: 12px;
     }
@@ -155,8 +149,11 @@
 
     <div id="position_popup" class="popup" data-note_id="">
         <div class="popup_header">Position</div>
-        <input id="position_input" type="number" maxlength="2" min="0" max="99"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+        <select id="position_select">
+            <option value="0">Top</option>
+            <option value="1">Middle</option>
+            <option value="2">Bottom</option>
+        </select>
         <div id="position_close" class="fake_link">Close</div>
     </div>
 
@@ -265,7 +262,7 @@
             get("save_config_button").addEventListener("click", save_config)
             get("clear_config_button").addEventListener("click", clear_config)
 
-            get("position_input").addEventListener("change", change_position)
+            get("position_select").addEventListener("change", change_position)
             get("position_close").addEventListener("click", close_position_popup)
             get("color_select").addEventListener("change", change_color)
             get("color_close").addEventListener("click", close_color_popup)
@@ -555,11 +552,13 @@
             note_el.style.order = note_object.position
 
             var textarea = note_el.getElementsByClassName("note_textarea")[0]
-            //textarea.innerText = note_object.text
             textarea.value = note_object.text
             textarea.style.backgroundColor = note_object.color
             textarea.addEventListener("click", textarea_on_click)
             textarea.addEventListener("input", textarea_on_input)
+
+            textarea.style.width = NOTE_MIN_WIDTH
+            textarea.style.height = NOTE_MIN_HEIGHT
 
             var position_el = note_el.getElementsByClassName("position")[0]
             position_el.addEventListener("click", show_position_popup)
@@ -573,7 +572,7 @@
             var close_el = note_el.getElementsByClassName("close")[0]
             close_el.addEventListener("click", close_note)
 
-            get("notes_container").appendChild(note_el)
+            get("notes_container").prepend(note_el)
 
             note_el.style.display = "block"
         }
@@ -658,7 +657,7 @@
             build_note({
                 id: get_now_as_string(),
                 text: "",
-                position: 1,
+                position: 0,
                 color: "white"
             })
         }
@@ -684,7 +683,8 @@
             var popup = get("position_popup")
             var note_el = event.target.parentNode.parentNode
             popup.dataset.note_id = note_el.id
-            get("position_input").value = note_el.style.order
+            console.log("order", note_el.style.order)
+            get("position_select").value = note_el.style.order
             position_popup(popup, note_el)
         }
 
