@@ -37,16 +37,27 @@
         white-space: pre;
 
         font-family: monospace;
-        font-size: 12px;
+        font-size: 14px;
         padding: 4px;
         border: 1px solid black;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
+        xborder-top-left-radius: 6px;
+        xborder-top-right-radius: 6px;
         overflow: auto;
 
         /* change here and constants NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT */
         min-width: 160px;
         min-height: 80px;
+    }
+
+    .note_header {
+        margin: 0px;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-top: 1px solid black;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        padding: 5px;
+        background-color: #eeeeee;
     }
 
     .note_footer {
@@ -57,6 +68,7 @@
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
         padding: 5px;
+        background-color: #eeeeee;
     }
 
     .fake_link {
@@ -165,15 +177,17 @@
     </div>
 
     <div id="note_template" class="note_template" style="display:none">
+        <div class="note_header">
+            <span class="fake_link close">Close</span>
+
+        </div>
 
         <textarea class="note_textarea"></textarea>
 
         <div class="note_footer">
-            <span class="fake_link position">Pos</span>
+            <span class="fake_link position">Position</span>
             <span class="fake_link color">Color</span>
-            <span class="fake_link delete">Del</span>
-            <span class="fake_link close">Close</span>
-
+            <span class="fake_link delete">Delete</span>
         </div>
     </div>
 
