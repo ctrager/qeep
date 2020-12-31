@@ -17,6 +17,7 @@
     button {
         font-size: 14px;
         font-family: arial;
+        overflow-anchor: none;
     }
 
     .note,
@@ -25,6 +26,7 @@
         background: transparent;
         order: 0;
         margin: 10px;
+        overflow-anchor: none;
     }
 
     .note_textarea {
@@ -42,7 +44,7 @@
         border-top-right-radius: 6px;
         overflow: auto;
 
-        /* change here and below in logic - search for "shrink" */
+        /* change here and constants NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT */
         min-width: 160px;
         min-height: 80px;
     }
@@ -77,7 +79,7 @@
         background-color: #eeeeee;
         border: 1px solid gray;
         border-radius: 5px;
-        padding: 3px;
+        padding: 6px;
 
         position: absolute;
         z-index: 99px;
@@ -85,12 +87,12 @@
 
     #color_select {
         padding: 3px;
-        margin: 3px;
+        margin: 12px;
     }
 
     #position_input {
         padding: 3px;
-        margin: 3px;
+        margin: 12px;
     }
 
     #notes_container {
@@ -167,9 +169,10 @@
         <textarea class="note_textarea"></textarea>
 
         <div class="note_footer">
-            <span class="fake_link position">Position</span>
+            <span class="fake_link position">Pos</span>
             <span class="fake_link color">Color</span>
-            <span class="fake_link delete">Delete</span>
+            <span class="fake_link delete">Del</span>
+            <span class="fake_link close">Close</span>
 
         </div>
     </div>
@@ -223,6 +226,9 @@
         const NOTE_DATA = "note_data"
         var socket = null
         var socket_connection_id = ""
+
+        const NOTE_MIN_WIDTH = "160px"
+        const NOTE_MIN_HEIGHT = "80px"
 
         document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -550,16 +556,21 @@
             var delete_el = note_el.getElementsByClassName("delete")[0]
             delete_el.addEventListener("click", show_delete_confirmation)
 
+            var close_el = note_el.getElementsByClassName("close")[0]
+            close_el.addEventListener("click", close_note)
+
             get("notes_container").appendChild(note_el)
 
             note_el.style.display = "block"
         }
 
         function textarea_on_input(event) {
-            resize_textarea(event.target)
+            //resize_textarea(event.target)
             set_status("Text changed")
             on_change()
         }
+
+        var current_note_id = ""
 
         function textarea_on_click(event) {
 
@@ -572,16 +583,30 @@
 
                 // skip the one we are editing
                 if (textarea.parentNode.id == event.target.parentNode.id) {
-
-                    continue;
+                    continue
                 }
 
-                textarea.style.width = "160px"
-                textarea.style.height = "80px"
+                textarea.style.width = NOTE_MIN_WIDTH
+                textarea.style.height = NOTE_MIN_HEIGHT
             }
 
-            resize_textarea(event.target)
-            close_all()
+            if (event.target.parentNode.id != current_note_id) {
+                resize_textarea(event.target)
+                current_note_id = event.target.parentNode.id
+            }
+
+            close_all_popups()
+        }
+
+        function close_note(event) {
+
+            var note_el = event.target.parentNode.parentNode;
+            var textarea = note_el.getElementsByClassName("note_textarea")[0]
+
+            textarea.style.width = NOTE_MIN_WIDTH
+            textarea.style.height = NOTE_MIN_HEIGHT
+
+            current_note_id = "" // so that we can re"open"
         }
 
         function resize_textarea(textarea) {
@@ -626,7 +651,7 @@
 
 
         function show_delete_confirmation() {
-            close_all()
+            close_all_popups()
             var confirmation = confirm("Are you sure you want to delete?")
 
             if (!confirmation) {
@@ -641,19 +666,16 @@
         }
 
         function show_position_popup(event) {
-            close_all()
+            close_all_popups()
             var popup = get("position_popup")
             var note_el = event.target.parentNode.parentNode
             popup.dataset.note_id = note_el.id
             get("position_input").value = note_el.style.order
-
-            popup.style.top = (20 + note_el.offsetTop) + "px"
-            popup.style.left = (20 + note_el.offsetLeft) + "px"
-            popup.style.display = "block"
+            position_popup(popup, note_el)
         }
 
         function show_color_popup(event) {
-            close_all()
+            close_all_popups()
 
             var popup = get("color_popup")
             var note_el = event.target.parentNode.parentNode
@@ -662,13 +684,16 @@
             var textarea = note_el.getElementsByClassName("note_textarea")[0]
             color_select.value = textarea.style.backgroundColor
             color_select.style.backgroundColor = textarea.style.backgroundColor
+            position_popup(popup, note_el)
+        }
 
-            popup.style.top = (20 + note_el.offsetTop) + "px"
-            popup.style.left = (20 + note_el.offsetLeft) + "px"
+        function position_popup(popup, note_el) {
+            popup.style.top = (note_el.offsetTop + note_el.offsetHeight - 120) + "px"
+            popup.style.left = (note_el.offsetLeft + 40) + "px"
             popup.style.display = "block"
         }
 
-        function close_all() {
+        function close_all_popups() {
             close_position_popup()
             close_color_popup()
         }
