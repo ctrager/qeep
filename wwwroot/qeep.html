@@ -36,37 +36,40 @@
 
         font-family: monospace;
         font-size: 14px;
-        padding: 4px;
-        border: 1px solid black;
+        padding-top: 6px;
+        padding-left: 3px;
+        border: 1px solid lightgray;
         overflow: auto;
         min-width: 160px;
         min-height: 80px;
     }
 
     .note_header {
+        display: none;
         margin: 0px;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-        border-top: 1px solid black;
+        border-left: 1px solid lightgray;
+        border-right: 1px solid lightgray;
+        border-top: 1px solid lightgray;
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
-        padding: 5px;
+        padding: 2px;
+        text-align: right;
         background-color: #eeeeee;
     }
 
     .note_footer {
         margin: 0px;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-        border-bottom: 1px solid black;
+        border-left: 1px solid lightgray;
+        border-right: 1px solid lightgray;
+        border-bottom: 1px solid lightgray;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
-        padding: 5px;
+        padding: 2px;
         background-color: #eeeeee;
     }
 
     .fake_link {
-        color: blue;
+        color: #3030ff;
         cursor: pointer;
     }
 
@@ -176,7 +179,6 @@
     <div id="note_template" class="note_template" style="display:none">
         <div class="note_header">
             <span class="fake_link close">Close</span>
-
         </div>
 
         <textarea class="note_textarea"></textarea>
@@ -601,10 +603,19 @@
 
                 textarea.style.width = NOTE_MIN_WIDTH
                 textarea.style.height = NOTE_MIN_HEIGHT
+
+                // header
+                var header = textarea.parentNode.getElementsByClassName("note_header")[0]
+                header.style.display = "none";
+
             }
 
             if (event.target.parentNode.id != current_note_id) {
                 resize_textarea(event.target)
+                // header
+                var header = event.target.parentNode.getElementsByClassName("note_header")[0]
+                header.style.display = "block";
+
                 current_note_id = event.target.parentNode.id
             }
 
@@ -618,6 +629,10 @@
 
             textarea.style.width = NOTE_MIN_WIDTH
             textarea.style.height = NOTE_MIN_HEIGHT
+
+            // header
+            var header = note_el.getElementsByClassName("note_header")[0]
+            header.style.display = "none";
 
             current_note_id = "" // so that we can re"open"
         }
