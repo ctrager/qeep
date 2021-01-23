@@ -149,16 +149,6 @@
 
     <div id="notes_container"></div>
 
-    <div id="position_popup" class="popup" data-note_id="">
-        <div class="popup_header">Position</div>
-        <select id="position_select">
-            <option value="0">Top</option>
-            <option value="1">Middle</option>
-            <option value="2">Bottom</option>
-        </select>
-        <div id="position_close" class="fake_link">Close</div>
-    </div>
-
     <div id="color_popup" class="popup" data-note_id="">
         <div class="popup_header">Color</div>
         <select id="color_select">
@@ -183,7 +173,8 @@
         <textarea class="note_textarea"></textarea>
 
         <div class="note_footer">
-            <span class="fake_link position">Position</span>
+            <span class="fake_link move_up">&lt;&lt;</span>
+            <span class="fake_link move_down">&gt;&gt;</span>
             <span class="fake_link color">Color</span>
             <span class="fake_link delete">Delete</span>
         </div>
@@ -263,8 +254,6 @@
             get("save_config_button").addEventListener("click", save_config)
             get("clear_config_button").addEventListener("click", clear_config)
 
-            get("position_select").addEventListener("change", change_position)
-            get("position_close").addEventListener("click", close_position_popup)
             get("color_select").addEventListener("change", change_color)
             get("color_close").addEventListener("click", close_color_popup)
 
@@ -561,8 +550,11 @@
             textarea.style.width = NOTE_MIN_WIDTH
             textarea.style.height = NOTE_MIN_HEIGHT
 
-            var position_el = note_el.getElementsByClassName("position")[0]
-            position_el.addEventListener("click", show_position_popup)
+            var move_up = note_el.getElementsByClassName("move_up")[0]
+            move_up.addEventListener("click", move_note_up)
+
+            var move_down = note_el.getElementsByClassName("move_down")[0]
+            move_down.addEventListener("click", move_note_down)
 
             var color_el = note_el.getElementsByClassName("color")[0]
             color_el.addEventListener("click", show_color_popup)
@@ -648,7 +640,6 @@
 
         }
 
-
         var timer1 = null
 
         function on_change() {
@@ -666,7 +657,6 @@
 
         }
 
-
         function create_new_note() {
             build_note({
                 id: get_now_as_string(),
@@ -675,7 +665,6 @@
                 color: "white"
             })
         }
-
 
         function show_delete_confirmation() {
             close_all_popups()
@@ -692,14 +681,72 @@
             on_change()
         }
 
-        function show_position_popup(event) {
-            close_all_popups()
-            var popup = get("position_popup")
-            var note_el = event.target.parentNode.parentNode
-            popup.dataset.note_id = note_el.id
-            console.log("order", note_el.style.order)
-            get("position_select").value = note_el.style.order
-            position_popup(popup, note_el)
+        function move_note_up(event) {
+
+            var notes_array = get_sorted_array_of_note_elements()
+
+            // # reorder
+            for (var i = 0; i < notes_array.length; i++) {
+                if (i > 0) {
+                    if (notes_array[i].id == event.target.parentNode.parentNode.id) {
+                        notes_array[i - 1].style.order = i
+                        notes_array[i].style.order = (i - 1)
+                    }
+                    else {
+                        notes_array[i].style.order = i
+                    }
+                }
+                else {
+                    notes_array[i].style.order = i
+                }
+            }
+
+            on_change()
+        }
+
+        function move_note_down(event) {
+
+            var notes_array = get_sorted_array_of_note_elements()
+
+            // # reorder
+            for (var i = notes_array.length - 1; i > -1; i--) {
+                if (i < (notes_array.length - 1)) {
+                    if (notes_array[i].id == event.target.parentNode.parentNode.id) {
+                        notes_array[i + 1].style.order = i
+                        notes_array[i].style.order = (i + 1)
+                    }
+                    else {
+                        notes_array[i].style.order = i
+                    }
+                }
+                else {
+                    notes_array[i].style.order = i
+                }
+            }
+
+            on_change()
+        }
+
+        function get_sorted_array_of_note_elements() {
+            var notes_html_collection = document.getElementsByClassName("note")
+
+            // the notes into a real array because we can't sort an HTMLCollection
+            var notes_array = []
+            for (var i = 0; i < notes_html_collection.length; i++) {
+                notes_array.push(notes_html_collection[i])
+            }
+
+            // sort by position
+            notes_array.sort(function (a, b) {
+                if (a.style.order < b.style.order) {
+                    return -1
+                }
+                else {
+                    return 1;
+                }
+            })
+
+            return notes_array
         }
 
         function show_color_popup(event) {
@@ -712,45 +759,18 @@
             var textarea = note_el.getElementsByClassName("note_textarea")[0]
             color_select.value = textarea.style.backgroundColor
             color_select.style.backgroundColor = textarea.style.backgroundColor
-            position_popup(popup, note_el)
-        }
-
-        function position_popup(popup, note_el) {
             popup.style.top = (note_el.offsetTop + note_el.offsetHeight - 120) + "px"
             popup.style.left = (note_el.offsetLeft + 40) + "px"
             popup.style.display = "block"
         }
 
         function close_all_popups() {
-            close_position_popup()
             close_color_popup()
-        }
-
-        function close_position_popup() {
-            var popup = get("position_popup")
-            popup.style.display = "none"
         }
 
         function close_color_popup() {
             var popup = get("color_popup")
             popup.style.display = "none"
-        }
-
-        function change_position(event) {
-            console.log("change_position", event.target.value)
-
-            // what position was entered
-            var position = event.target.value
-
-            // which note?
-            var id = event.target.parentNode.dataset.note_id
-            var note_el = get(id)
-
-            // change flex order, aka "position"
-            note_el.style.order = position
-
-            // save
-            on_change()
         }
 
         function change_color(event) {
